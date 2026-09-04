@@ -21,7 +21,7 @@ export const CATEGORIES = {
   cafe:     { label: "Cafés",        icon: "☕", color: "#8A5A22" },
   monument: { label: "Monuments",    icon: "🕌", color: "#1F6F78" },
   bar:      { label: "Bars & toits", icon: "🍸", color: "#14565E" },
-  jardin:   { label: "Jardins",      icon: "🌿", color: "#3E8E7E" },
+  jardin:   { label: "Jardins",      icon: "🌿", color: "#357A6A" },
   escapade: { label: "Escapades",    icon: "🏔️", color: "#2A6350" }
 };
 

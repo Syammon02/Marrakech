@@ -36,6 +36,41 @@ const TARIF_KM = 11, MINI = 40, SINUOSITE = 1.35, VITESSE = 21;
 const TAUX_EUR = 10.82;
 const TAUX_DATE = "4 septembre 2026";
 
+/* Thème : trois positions, la préférence système par défaut. Le choix manuel
+   est enregistré sur la racine du document, ce que la feuille de styles lit. */
+const THEME_KEY = "mrk.theme.v1";
+const THEMES = [
+  { val: "auto",  icone: "◐", label: "Thème automatique, selon le système" },
+  { val: "light", icone: "☀", label: "Thème clair" },
+  { val: "dark",  icone: "☾", label: "Thème sombre" }
+];
+let theme = "auto";
+try { theme = ["light", "dark"].includes(localStorage.getItem(THEME_KEY))
+  ? localStorage.getItem(THEME_KEY) : "auto"; } catch {}
+
+const sombreSysteme = matchMedia("(prefers-color-scheme: dark)");
+const estSombre = () => theme === "dark" || (theme === "auto" && sombreSysteme.matches);
+
+function appliquerTheme() {
+  const r = document.documentElement;
+  if (theme === "auto") r.removeAttribute("data-theme");
+  else r.dataset.theme = theme;
+  const t = THEMES.find(x => x.val === theme);
+  const b = document.getElementById("btn-theme");
+  if (b) { b.textContent = t.icone; b.setAttribute("aria-label", t.label); }
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.content = estSombre() ? "#1C1411" : "#241611";
+  majFondCarte();
+}
+
+function cyclerTheme() {
+  const i = THEMES.findIndex(x => x.val === theme);
+  theme = THEMES[(i + 1) % THEMES.length].val;
+  try { localStorage.setItem(THEME_KEY, theme); } catch {}
+  appliquerTheme();
+  toast(THEMES.find(x => x.val === theme).label);
+}
+
 const DEVISE_KEY = "mrk.devise.v1";
 let devise = "MAD";
 try { devise = localStorage.getItem(DEVISE_KEY) === "EUR" ? "EUR" : "MAD"; } catch {}
@@ -271,22 +306,31 @@ function replisCarte() {
       fonctionnent normalement.</div></div>`;
 }
 
+let tuiles = null, coucheMarqueurs = null;
+
+/* Fond de carte accordé au thème. Positron et Dark Matter sont des fonds
+   quasi monochromes : sur une carte couverte d'épingles de couleur, ils se
+   lisent bien mieux que Voyager, qui colore déjà routes, parcs et bâtiments. */
+function urlFond() {
+  return `https://{s}.basemaps.cartocdn.com/${estSombre() ? "dark_all" : "light_all"}/{z}/{x}/{y}{r}.png`;
+}
+
+function majFondCarte() {
+  if (!carteDispo || !map || !tuiles) return;
+  tuiles.setUrl(urlFond());
+}
+
 function initCarte() {
   if (!carteDispo) return replisCarte();
   map = L.map("map", { zoomControl: false, attributionControl: true })
          .setView([HOTEL.lat, HOTEL.lng], 13);
   L.control.zoom({ position: "bottomright" }).addTo(map);
-  const sombre = matchMedia("(prefers-color-scheme: dark)");
-  /* Fond de carte accordé au thème : un plan blanc dans une interface sombre
-     éblouit, typiquement le soir sur une terrasse. */
-  const fond = t => `https://{s}.basemaps.cartocdn.com/${t ? "dark_all" : "rastertiles/voyager"}/{z}/{x}/{y}{r}.png`;
-  let tuiles = L.tileLayer(fond(sombre.matches), {
+  L.control.scale({ position: "bottomleft", imperial: false, maxWidth: 120 }).addTo(map);
+
+  tuiles = L.tileLayer(urlFond(), {
     maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO'
   }).addTo(map);
-  sombre.addEventListener("change", e => {
-    map.removeLayer(tuiles);
-    tuiles = L.tileLayer(fond(e.matches), { maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }).addTo(map);
-  });
+  sombreSysteme.addEventListener("change", () => { if (theme === "auto") appliquerTheme(); });
 
   const chargement = document.getElementById("map-load");
   tuiles.on("load", () => { if (chargement) chargement.hidden = true; });
@@ -298,41 +342,113 @@ function initCarte() {
                       iconSize: [40, 40], iconAnchor: [20, 20] })
   }).addTo(map).bindPopup(`<b>${HOTEL.name}</b><br><span style="color:#7A6A5D">${HOTEL.address}</span><br><small>Point de départ de tous les tarifs taxi</small>`);
 
-  enrichis.forEach(p => {
-    const m = L.marker([p.lat, p.lng], {
-      icon: iconePoi(p),
-      title: p.nom
-    }).addTo(map);
-    m.on("click", () => ouvrirDetail(p.id, false));
-    marqueurs[p.id] = m;
-  });
+  coucheMarqueurs = L.layerGroup().addTo(map);
+  map.on("zoomend moveend", dessinerMarqueurs);
+
+  /* Cadrage d'ouverture : l'hôtel et la ville, sans les escapades lointaines
+     qui dézoomeraient jusqu'à Essaouira et rendraient la carte inutile. */
+  const ville = enrichis.filter(p => p._dist < 12).map(p => [p.lat, p.lng]);
+  map.fitBounds(L.latLngBounds([[HOTEL.lat, HOTEL.lng], ...ville]).pad(0.06),
+                { animate: false });
+
+  dessinerMarqueurs();
 }
 
-function iconePoi(p) {
+function iconePoi(p, avecNom) {
   const c = CATEGORIES[p.cat].color;
   const fav = favoris.has(p.id) ? " fav" : "";
+  const actif = etat.actif === p.id;
   return L.divIcon({
-    className: "pin-wrap" + (etat.actif === p.id ? " actif" : ""),
-    html: `<div class="pin${fav}" style="background:${c}"><span>${CATEGORIES[p.cat].icon}</span></div>`,
+    className: "pin-wrap" + (actif ? " actif" : ""),
+    html: `<div class="pin${fav}" style="background:${c}"><span>${CATEGORIES[p.cat].icon}</span></div>` +
+          (avecNom || actif ? `<b class="pin-nom">${p.nom}</b>` : ""),
     iconSize: [34, 34], iconAnchor: [17, 32], popupAnchor: [0, -30]
   });
 }
 
-function rafraichirMarqueur(id) {
-  if (!carteDispo) return;
-  const m = marqueurs[id];
-  if (m) m.setIcon(iconePoi(parId[id]));
+/* Regroupement par grille de pixels. Une trentaine d'adresses tiennent dans
+   le kilomètre carré de la médina : sans regroupement, les épingles se
+   recouvrent et la carte devient illisible en dessous du zoom 16. */
+const CELLULE = 52;
+
+function grouper(liste, zoom) {
+  const cases = new Map();
+  liste.forEach(p => {
+    const pt = map.project([p.lat, p.lng], zoom);
+    const cle = `${Math.floor(pt.x / CELLULE)}:${Math.floor(pt.y / CELLULE)}`;
+    if (!cases.has(cle)) cases.set(cle, []);
+    cases.get(cle).push(p);
+  });
+  return [...cases.values()];
+}
+
+/* Le chiffre doit rester lisible sur la couleur de la catégorie : blanc sur les
+   teintes sombres, encre sur le safran, qui tomberait à 2,1:1 avec du blanc. */
+function surCouleur(hex) {
+  const v = [1, 3, 5].map(i => {
+    const c = parseInt(hex.substr(i, 2), 16) / 255;
+    return c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4;
+  });
+  const lum = .2126 * v[0] + .7152 * v[1] + .0722 * v[2];
+  return lum > .32 ? "#241611" : "#fff";
+}
+
+function iconeGroupe(groupe) {
+  const cats = {};
+  groupe.forEach(p => { cats[p.cat] = (cats[p.cat] || 0) + 1; });
+  const dominante = Object.entries(cats).sort((a, b) => b[1] - a[1])[0][0];
+  const taille = groupe.length > 9 ? 42 : 36;
+  return L.divIcon({
+    className: "groupe-wrap",
+    html: `<div class="groupe" style="background:${CATEGORIES[dominante].color};
+             color:${surCouleur(CATEGORIES[dominante].color)};
+             width:${taille}px;height:${taille}px">${groupe.length}</div>`,
+    iconSize: [taille, taille], iconAnchor: [taille / 2, taille / 2]
+  });
+}
+
+function dessinerMarqueurs() {
+  if (!carteDispo || !coucheMarqueurs) return;
+  coucheMarqueurs.clearLayers();
+  marqueurs = {};
+  const zoom = map.getZoom();
+  /* On ne dessine que ce qui est dans le champ, avec une marge : sans cela on
+     fabrique des épingles pour Essaouira et Ouzoud à chaque déplacement. */
+  const champ = map.getBounds().pad(0.3);
+  const visibles = filtrer().filter(p => champ.contains([p.lat, p.lng]));
+  /* Les noms n'apparaissent qu'au zoom de la rue, et seulement s'ils ne se
+     marchent pas dessus : au-delà d'une douzaine d'épingles, on les coupe. */
+  const avecNom = zoom >= 16 && visibles.length <= 12;
+
+  grouper(visibles, zoom).forEach(groupe => {
+    if (groupe.length === 1 || zoom >= 17) {
+      groupe.forEach(p => {
+        const m = L.marker([p.lat, p.lng], { icon: iconePoi(p, avecNom), title: p.nom })
+                   .on("click", () => ouvrirDetail(p.id, false));
+        coucheMarqueurs.addLayer(m);
+        marqueurs[p.id] = m;
+      });
+      return;
+    }
+    const centre = groupe.reduce((a, p) => [a[0] + p.lat / groupe.length,
+                                            a[1] + p.lng / groupe.length], [0, 0]);
+    const m = L.marker(centre, {
+      icon: iconeGroupe(groupe),
+      title: `${groupe.length} adresses : ${groupe.slice(0, 4).map(p => p.nom).join(", ")}${groupe.length > 4 ? "…" : ""}`
+    }).on("click", () => {
+      const bornes = L.latLngBounds(groupe.map(p => [p.lat, p.lng]));
+      map.flyToBounds(bornes.pad(0.4), { maxZoom: 17, duration: mouvementReduit.matches ? 0 : .7 });
+    });
+    coucheMarqueurs.addLayer(m);
+  });
+}
+
+function rafraichirMarqueur() {
+  dessinerMarqueurs();
 }
 
 function majVisibilite() {
-  if (!carteDispo) return;
-  const visibles = new Set(filtrer().map(p => p.id));
-  enrichis.forEach(p => {
-    const m = marqueurs[p.id];
-    if (!m) return;
-    const el = m.getElement();
-    if (el) el.style.display = visibles.has(p.id) ? "" : "none";
-  });
+  dessinerMarqueurs();
 }
 
 /* =====================================================================
@@ -687,11 +803,15 @@ function initSheet() {
   const sheet = $("#sheet"), grab = $("#grabber");
   const etats = ["peek", "", "full"];
   let idx = 1;
+  const majOffset = () => document.documentElement.style.setProperty(
+    "--sheet-offset", sheet.getBoundingClientRect().height + "px");
   const applique = () => {
     sheet.classList.remove("peek", "full");
     if (etats[idx]) sheet.classList.add(etats[idx]);
-    setTimeout(() => map && map.invalidateSize(), 300);
+    setTimeout(() => { majOffset(); map && map.invalidateSize(); }, 300);
   };
+  majOffset();
+  addEventListener("resize", majOffset);
   let y0 = null, h0 = 0;
   grab.addEventListener("pointerdown", e => {
     y0 = e.clientY; h0 = sheet.getBoundingClientRect().height;
@@ -701,6 +821,7 @@ function initSheet() {
     if (y0 === null) return;
     const h = Math.min(innerHeight - 92, Math.max(100, h0 - (e.clientY - y0)));
     sheet.style.height = h + "px";
+    majOffset();
   });
   grab.addEventListener("pointerup", e => {
     if (y0 === null) return;
@@ -800,6 +921,8 @@ function initEvenements() {
     });
   });
 
+  $("#btn-theme").addEventListener("click", cyclerTheme);
+
   $("#btn-hotel").addEventListener("click", () => {
     allerA(HOTEL.lat, HOTEL.lng, 15);
     toast("Riu Tikida Garden, votre camp de base");
@@ -862,6 +985,7 @@ function suivreReseau() {
 }
 
 function demarrer() {
+  appliquerTheme();
   suivreReseau();
   initCarte();
   initFiltres();

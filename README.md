@@ -28,8 +28,11 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
   Le choix est mémorisé.
 - **PWA** : installable sur l'écran d'accueil, service worker, tuiles de carte et photos
   mises en cache pour survivre à une 4G capricieuse dans la médina.
-- **Thème clair et sombre** automatiques, selon la préférence du système, fond de carte
-  compris.
+- **Thème clair, sombre ou automatique** : un bouton dans la barre du haut fait le tour
+  des trois, le choix est mémorisé, et le fond de carte suit.
+- **Carte lisible** : fond quasi monochrome, regroupement des épingles qui se recouvrent
+  avec le nombre d'adresses de la zone, nom affiché sous l'épingle au zoom de la rue,
+  échelle métrique, et cadrage d'ouverture sur la ville sans les escapades lointaines.
 - **Accessibilité** : navigation complète au clavier, cibles tactiles de 44 px minimum,
   contrastes vérifiés au-dessus de 4,5:1 dans les deux thèmes, `prefers-reduced-motion`
   respecté.

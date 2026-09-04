@@ -37,7 +37,10 @@ et pas à un template de guide.
 | Ombres : une seule par niveau (carte, feuille, bouton principal) | L'ombre marque l'élévation, elle n'est pas un effet appliqué partout. |
 | Rayons : 10 px badges, 12 à 14 px boutons, 16 px cartes, 22 px feuille | Échelle croissante avec la taille de l'élément, pas de pilule généralisée. |
 | Dégradé uniquement sur l'image d'en-tête et le visuel généré | Sur l'en-tête, il garantit le contraste du texte blanc. Sur le visuel, il différencie les catégories. Nulle part ailleurs. |
-| Thème sombre automatique | L'app se consulte le soir sur une terrasse. Mêmes teintes, valeurs inversées, fond de carte sombre assorti. |
+| Thème clair, sombre ou automatique | L'app se consulte le soir sur une terrasse. Mêmes teintes, valeurs inversées, fond de carte sombre assorti. |
+| Fond de carte Positron et Dark Matter | Quasi monochromes. Sur une carte couverte d'épingles de couleur, ils se lisent bien mieux que Voyager, qui colore déjà routes, parcs et bâtiments. |
+| Regroupement des épingles par grille de 52 px | Une trentaine d'adresses tiennent dans le kilomètre carré de la médina : sans regroupement, la carte est illisible sous le zoom 16. |
+| Noms affichés seulement au zoom 16 et au-delà, et à moins de douze épingles | Une étiquette par épingle est utile quand on cherche une rue, illisible quand tout se chevauche. |
 | Emoji comme pictogrammes de catégorie | Universels, sans dépendance à une bibliothèque d'icônes, et chacun est relié à son contenu (dromadaire pour les activités, pas une étoile magique). |
 
 ## Ce que l'app ne fait pas, volontairement
