@@ -22,7 +22,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # enablement crée le site Pages via l'API si le dépôt ne l'a pas encore
+      # activé, au lieu d'échouer sur « Get Pages site failed »
       - uses: actions/configure-pages@v5
+        with:
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
