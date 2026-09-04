@@ -1,4 +1,4 @@
-import { HOTEL, CATEGORIES, POIS, WIKI } from "./data.js";
+import { HOTEL, CATEGORIES, POIS, WIKI, SOURCES, RELEVE } from "./data.js";
 
 /* =====================================================================
    Utilitaires
@@ -56,6 +56,15 @@ function taxiInfo(poi) {
 
 const fmtPrix = n => n ? "€".repeat(n) : "Gratuit";
 const fmtNote = n => n.toFixed(1).replace(".", ",");
+const fmtNb = n => n.toLocaleString("fr-FR");
+
+/* Renvoie la note à afficher, avec sa provenance. Jamais de note orpheline :
+   soit elle vient d'une source nommée, soit elle est signée comme la mienne. */
+function noteAffichee(p) {
+  if (p.avis && p.avis.note) return { val: p.avis.note, src: p.avis.src, nb: p.avis.nb };
+  if (p.note) return { val: p.note, src: "guide" };
+  return null;
+}
 const fmtKm = n => n.toFixed(1).replace(".", ",");
 
 /* =====================================================================
@@ -180,7 +189,12 @@ const etat = {
   maPosition: null
 };
 
-const enrichis = POIS.map(p => ({ ...p, _taxi: taxiInfo(p), _dist: distanceKm(HOTEL, p) }));
+/* Les données vérifiées écrasent les valeurs éditoriales de départ : une
+   adresse ou des horaires relevés priment toujours sur ce que j'avais écrit. */
+const enrichis = POIS.map(p => {
+  const src = SOURCES[p.id] || {};
+  return { ...p, ...src, _src: !!SOURCES[p.id], _taxi: taxiInfo(p), _dist: distanceKm(HOTEL, p) };
+});
 const parId = Object.fromEntries(enrichis.map(p => [p.id, p]));
 
 /* =====================================================================
@@ -288,7 +302,10 @@ function carteHTML(p) {
       <div class="card-body">
         <h3>${p.nom}</h3>
         <div class="meta">
-          <span class="note" title="Note du guide"><b>★</b> ${fmtNote(p.note)}</span>
+          ${(() => { const n = noteAffichee(p); return n
+            ? `<span class="note" title="${n.src === "guide" ? "Note du guide" : "Note " + n.src}">
+                 <b>★</b> ${fmtNote(n.val)}${n.src === "guide" ? "" : `<i>${n.src.slice(0, 2)}</i>`}</span>`
+            : ""; })()}
           <span aria-hidden="true">·</span><span>${fmtPrix(p.prix)}</span>
           <span aria-hidden="true">·</span><span>${p.duree}</span>
         </div>
@@ -321,9 +338,9 @@ function rendreListe() {
     if (cta) cta.onclick = reinitialiser;
   } else {
     liste.innerHTML = res.map(carteHTML).join("") + `
-      <p class="source">Notes attribuées par ce guide, ce ne sont pas des moyennes
-      d'avis en ligne. Prix de taxi estimés à partir de la distance depuis l'hôtel,
-      à négocier avant de monter.</p>`;
+      <p class="source">Les notes marquées <b>Tr</b> viennent de Tripadvisor, relevées en
+      ${RELEVE}. Les autres sont mon appréciation, pas une moyenne d'avis. Les prix de
+      taxi sont estimés à partir de la distance depuis l'hôtel, à négocier avant de monter.</p>`;
     $$("#liste img[data-poi]").forEach(img => peupleImage(img, parId[img.dataset.poi]));
   }
 
@@ -406,8 +423,12 @@ function ouvrirDetail(id, recentre = true) {
           <div class="kicker">${CATEGORIES[p.cat].icon} ${CATEGORIES[p.cat].label}</div>
           <h2>${p.nom}</h2>
           <div class="meta">
-            <span class="note"><b>★</b> ${fmtNote(p.note)}<small> note du guide</small></span>
-            <span aria-hidden="true">·</span>
+            ${(() => { const n = noteAffichee(p); return n
+              ? `<span class="note"><b>★</b> ${fmtNote(n.val)}<small>${
+                  n.src === "guide" ? " note du guide"
+                  : ` sur ${n.src}${n.nb ? `, ${fmtNb(n.nb)} avis` : ""}`}</small></span>
+                 <span aria-hidden="true">·</span>`
+              : ""; })()}
             <span>${fmtPrix(p.prix)}</span>
           </div>
         </div>
@@ -434,6 +455,12 @@ function ouvrirDetail(id, recentre = true) {
         <p>${p.desc}</p>
       </div>
 
+      ${p.monAvis ? `
+      <div class="section mon-avis">
+        <h4>Mon avis</h4>
+        <p>${p.monAvis}</p>
+      </div>` : ""}
+
       <div class="section">
         <h4>Bon à savoir</h4>
         <ul class="tips">${p.tips.map(x => `<li>${x}</li>`).join("")}</ul>
@@ -441,11 +468,18 @@ function ouvrirDetail(id, recentre = true) {
 
       <div class="section">
         <h4>Pratique</h4>
-        <p style="font-size:14px">
-          <b>Horaires :</b> ${p.horaires}<br>
-          <b>Réservation :</b> ${p.reserver ? "recommandée, voire indispensable" : "pas nécessaire"}<br>
-          <b>Coordonnées :</b> ${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}
-        </p>
+        <dl class="pratique">
+          ${p.adresse ? `<dt>Adresse</dt><dd>${p.adresse}</dd>` : ""}
+          <dt>Horaires</dt><dd>${p.horaires}</dd>
+          ${p.tarif ? `<dt>Tarif</dt><dd>${p.tarif}</dd>` : ""}
+          ${p.tel ? `<dt>Téléphone</dt><dd><a href="tel:${p.tel.replace(/ /g, "")}">${p.tel}</a></dd>` : ""}
+          ${p.site ? `<dt>Site</dt><dd><a href="https://${p.site}" target="_blank" rel="noopener">${p.site}</a></dd>` : ""}
+          <dt>Réservation</dt><dd>${p.reserver ? "recommandée, voire indispensable" : "pas nécessaire"}</dd>
+          <dt>Coordonnées</dt><dd>${p.lat.toFixed(5)}, ${p.lng.toFixed(5)}</dd>
+        </dl>
+        <p class="releve">${p._src
+          ? `Adresse, horaires et tarifs relevés en ${RELEVE} par recherche web. Vérifiez avant de vous déplacer, les horaires marrakchis bougent.`
+          : `Horaires et informations issus de ma documentation, non revérifiés en ligne pour cette adresse. Confirmez avant de vous déplacer.`}</p>
       </div>
     </div>
 

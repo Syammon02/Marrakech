@@ -507,3 +507,147 @@ export const WIKI = {
   ouzoud:"Cascades_d'Ouzoud",
   essaouira:"Essaouira"
 };
+
+/* =====================================================================
+   Données vérifiées par recherche web, relevées en septembre 2026.
+   Chaque entrée ne contient que ce qui a été trouvé et recoupé : adresse,
+   téléphone, site, horaires, tarif d'entrée, et note avec sa source et son
+   nombre d'avis. Rien n'est extrapolé : une adresse absente reste absente,
+   une note absente n'est pas remplacée par une estimation.
+   `monAvis` est mon appréciation personnelle, clairement séparée des faits.
+   ===================================================================== */
+export const RELEVE = "septembre 2026";
+
+export const SOURCES = {
+  nomad: {
+    adresse: "1 Derb Aarjane, Rahba Lakdima, médina",
+    site: "nomadmarrakech.com",
+    monAvis: "Réservez une bonne semaine à l'avance et demandez explicitement le dernier niveau, sinon vous dînerez au premier étage sans vue et vous vous demanderez pourquoi tout le monde en parle. Visez 18 h 30 pour le coucher du soleil."
+  },
+  lejardin: {
+    adresse: "32 Souk El Jeld, Sidi Abdelaziz, médina",
+    tel: "+212 5 24 37 82 95",
+    horaires: "10 h - 23 h, tous les jours",
+    avis: { src: "Tripadvisor", note: 4.0 },
+    monAvis: "Une cour de bananiers derrière une porte anonyme, avec des tortues qui traversent la salle. La cuisine ne vous marquera pas, l'ombre à midi entre deux souks, si."
+  },
+  terrasseepices: {
+    adresse: "15 Souk Cherifia, Sidi Abdelaziz, médina",
+    tel: "+212 5 24 37 59 04",
+    site: "terrassedesepices.com",
+    horaires: "12 h - 17 h et 18 h 30 - 0 h",
+    avis: { src: "Tripadvisor", note: 4.2, nb: 5759 },
+    monAvis: "Valeur sûre pour un premier soir : on y mange correctement, on voit l'Atlas, et c'est plus facile à réserver que Nomad. Demandez une alcôve d'angle."
+  },
+  daryacout: {
+    adresse: "79 Derb Sidi Ahmed Soussi, Bab Doukkala, médina",
+    tel: "+212 5 24 38 29 29",
+    site: "daryacout.com",
+    horaires: "19 h - 23 h, fermé le lundi",
+    avis: { src: "Tripadvisor", note: 4.1, nb: 1324 },
+    monAvis: "On y va pour la mise en scène, pas pour la finesse des plats : le menu unique est long et copieux, la note est élevée, et 4,1 sur Tripadvisor traduit bien ce décalage. Faites-vous déposer à Bab Doukkala, l'accès est un dédale et aucun taxi ne trouvera la porte."
+  },
+  foundouk: {
+    adresse: "55 Souk Hal Fassi, Kat Bennahid, médina",
+    site: "foundouk.com",
+    horaires: "12 h - 0 h, fermé le lundi",
+    avis: { src: "Tripadvisor", nb: 3563, txt: "256e sur 1 806 restaurants, Travellers' Choice 2025" },
+    monAvis: "Montez directement au rooftop, le rez-de-chaussée ne vaut pas le déplacement. C'est le dîner logique du jour où vous faites Ben Youssef et le musée, ils sont à trois minutes à pied."
+  },
+  alfassia: {
+    adresse: "55 boulevard Mohammed Zerktouni, Guéliz",
+    avis: { src: "Tripadvisor", note: 4.3, nb: 376 },
+    monAvis: "Tenu par des femmes depuis 1987, et la meilleure cuisine fassie de la ville. Si vous ne faites qu'un seul vrai repas marocain de la semaine, faites-le ici, et prenez le tajine d'agneau aux coings."
+  },
+  amal: {
+    adresse: "Rue Allal Ben Ahmed, angle rue Ibn Sina, Guéliz",
+    tel: "+212 5 24 44 68 96",
+    site: "amalnonprofit.org",
+    horaires: "12 h - 15 h 30, fermé le dimanche",
+    avis: { src: "Tripadvisor", txt: "Travellers' Choice 2025" },
+    monAvis: "Le meilleur rapport qualité-prix-sens du séjour, et de loin. Visez le vendredi pour le couscous, arrivez avant 13 h, et sachez que ça ferme le dimanche : c'est le piège classique."
+  },
+  latrattoria: {
+    adresse: "179 rue Mohammed El Beqal, Guéliz",
+    tel: "+212 5 24 43 26 41",
+    horaires: "12 h - 1 h",
+    avis: { src: "Tripadvisor", note: 4.5, nb: 1442 },
+    monAvis: "La respiration italienne au milieu d'une semaine de tajines, dans une villa décorée par Bill Willis. Demandez une table au bord de la piscine éclairée."
+  },
+  plus61: {
+    adresse: "96 rue Mohammed El Beqal, Guéliz, face au cinéma Colisée",
+    tel: "+212 5 24 20 70 20",
+    avis: { src: "Tripadvisor", note: 4.6, nb: 269, txt: "31e des MENA's 50 Best Restaurants 2026" },
+    monAvis: "Bistrot australien qui fait son pain, ses pâtes, son fromage et son yaourt sur place. C'est le repas le plus contemporain de Marrakech, et la salle est petite : réservez."
+  },
+  naranj: {
+    adresse: "84 rue Riad Zitoun Jdid, médina",
+    tel: "+212 5 24 38 68 05",
+    site: "naranj.ma",
+    horaires: "12 h 30 - 22 h 30, tous les jours",
+    avis: { src: "Tripadvisor", note: 4.7, nb: 3000, txt: "Travellers' Choice 2025" },
+    monAvis: "4,7 sur plus de 3 000 avis, c'est l'une des meilleures notes de la ville et elle est méritée. Faites-en votre déjeuner du jour des palais : c'est à 200 m de la Bahia, c'est climatisé, et on en ressort en vingt minutes si besoin."
+  },
+  cafearabe: {
+    adresse: "184 rue Mouassine, médina",
+    monAvis: "Une des rares terrasses du souk qui sert de l'alcool, avec vue dégagée sur la Koutoubia. Le patio du bas reste frais quand le toit est écrasé de soleil."
+  },
+  bacha: {
+    adresse: "Rue Dar el Bacha, médina, dans une aile du palais",
+    monAvis: "La file est réelle et la carte fait 200 cafés : venez à l'ouverture ou après 16 h, et prenez le temps de lire la carte avant de commander. Enchaînez avec le musée, c'est le même bâtiment et le même billet de temps."
+  },
+  elfenn: {
+    adresse: "Derb Moulay Abdullah Ben Hezzian, accès par la boutique rue Lalla Fatima Zahra, près de Bab Laksour",
+    site: "el-fenn.com",
+    horaires: "12 h jusqu'au soir, dernières commandes à 22 h 30",
+    avis: { src: "Tripadvisor", note: 3.8 },
+    monAvis: "1 300 m² de terrasses face à la Koutoubia, dans un riad bourré d'art contemporain : c'est le plus beau toit de la médina, et la note moyenne ne le reflète pas, parce qu'on y vient pour le lieu plus que pour l'assiette. Pas de réservation, capacité limitée : arrivez tôt pour le coucher du soleil."
+  },
+  bahia: {
+    adresse: "5 Rue Riad Zitoun el Jdid, médina",
+    horaires: "9 h - 17 h, tous les jours",
+    tarif: "100 MAD adulte, 30 MAD enfant",
+    monAvis: "Le plus abouti des palais visitables. Ouvrez la journée avec, à 9 h pile, vous aurez les patios pour vous, et enchaînez avec Dar Si Saïd à 300 m."
+  },
+  badi: {
+    horaires: "9 h - 17 h, tous les jours",
+    tarif: "100 MAD adulte, 50 MAD enfant de 7 à 13 ans",
+    monAvis: "Une ruine grandiose plutôt qu'un palais : on y vient pour les remparts, les cigognes et le panorama sur la médina en fin de journée. Ne ratez pas le minbar de la Koutoubia, exposé dans une salle annexe."
+  },
+  saadiens: {
+    horaires: "9 h - 17 h, tous les jours",
+    tarif: "100 MAD",
+    monAvis: "Le site est minuscule et la file peut coûter 40 minutes pour 90 secondes devant la salle des Douze Colonnes. À l'ouverture, ou pas du tout."
+  },
+  benyoussef: {
+    site: "medersabenyoussef.ma",
+    horaires: "9 h - 19 h, 9 h - 16 h 30 pendant le Ramadan",
+    tarif: "50 MAD adulte, 10 MAD moins de 12 ans",
+    monAvis: "Le plus beau monument de la ville depuis sa réouverture en 2022, et le moins cher des grands sites à 50 MAD. Montez à l'étage dans les cellules d'étudiants, presque personne ne le fait."
+  },
+  jardinsecret: {
+    horaires: "9 h 30 - 18 h 30 en février et octobre, 9 h 30 - 19 h 30 de mars à septembre, 9 h 30 - 18 h de novembre à janvier",
+    tarif: "100 MAD le jardin, 40 MAD de plus pour la tour",
+    monAvis: "Le meilleur endroit pour souffler entre deux souks. Les 40 MAD de la tour sont les mieux dépensés de la médina : c'est la seule vue plongeante à 360° du quartier."
+  },
+  majorelle: {
+    site: "tickets.jardinmajorelle.com",
+    horaires: "8 h 30 - 18 h, dernier accès à 17 h 30",
+    tarif: "150 MAD le jardin seul, 850 MAD le billet combiné avec les musées Berbère et YSL",
+    monAvis: "Billets strictement nominatifs, par créneau, avec 15 minutes de tolérance, et uniquement sur le site officiel. Prenez le créneau de 8 h 30 : c'est la seule façon de voir le bleu sans la foule."
+  },
+  ysl: {
+    horaires: "10 h - 18 h, fermé le mercredi",
+    monAvis: "Le bâtiment de brique en dentelle de Studio KO vaut à lui seul la visite, et son café climatisé est le meilleur repli de la mi-journée dans ce quartier."
+  },
+  hammambains: {
+    adresse: "2 Derb Sedra, Bab Agnaou, médina",
+    site: "lesbainsdemarrakech.com",
+    tarif: "de 650 MAD (1 h, un soin) à 1 700 MAD (4 h, quatre soins)",
+    monAvis: "Le spa le plus complet de la médina, avec piscine. À caler le jour où les souks vous auront épuisés, pas le premier jour."
+  },
+  hammamrose: {
+    tarif: "environ 300 à 500 MAD selon la formule",
+    monAvis: "Moitié moins cher que les grands spas pour un rituel très correct. C'est le bon premier hammam si vous n'en avez jamais fait."
+  }
+};

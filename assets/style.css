@@ -226,6 +226,18 @@ img{max-width:100%;display:block}
 .note{display:inline-flex;align-items:center;gap:3px;font-weight:700;color:var(--encre)}
 .note b{color:var(--safran)}
 .note small{font-weight:500;font-size:11px;opacity:.75;margin-left:3px}
+.note i{
+  font-style:normal;font-size:9.5px;font-weight:700;letter-spacing:.04em;
+  margin-left:3px;padding:1px 4px;border-radius:5px;
+  background:rgba(31,111,120,.14);color:var(--zellige);vertical-align:1px;
+}
+.mon-avis{background:rgba(217,154,11,.07);border-left:3px solid var(--safran)}
+.mon-avis h4{color:var(--safran)}
+.pratique{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:14px}
+.pratique dt{font-weight:700;color:var(--gris);font-size:12.5px;padding-top:1px}
+.pratique dd{margin:0;line-height:1.5}
+.pratique a{color:var(--zellige);font-weight:600}
+.releve{margin:14px 0 0;font-size:11.5px;line-height:1.5;color:var(--gris);font-style:italic}
 .hd-note{
   margin-left:auto;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;
   color:var(--gris);font-weight:700;
