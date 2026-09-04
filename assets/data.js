@@ -26,7 +26,7 @@ export const CATEGORIES = {
 };
 
 /* champs :
-   id, nom, cat, lat, lng, note (/5), avis (nb approx.), prix (1-4), duree,
+   id, nom, cat, lat, lng, note (/5, appréciation de ce guide), prix (1-4), duree,
    desc, tips (array), horaires, reserver (bool), taxi (override optionnel {jour,nuit,note}) */
 
 export const POIS = [
