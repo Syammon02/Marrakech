@@ -6,6 +6,15 @@ import { HOTEL, CATEGORIES, POIS, WIKI } from "./data.js";
 const $  = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 
+const mouvementReduit = matchMedia("(prefers-reduced-motion: reduce)");
+/* Déplacement de carte : animé par défaut, instantané si l'utilisateur a demandé
+   moins de mouvement au niveau du système. */
+function allerA(lat, lng, zoom) {
+  if (!carteDispo) return;
+  if (mouvementReduit.matches) map.setView([lat, lng], zoom);
+  else map.flyTo([lat, lng], zoom, { duration: .8 });
+}
+
 const R_TERRE = 6371;
 function distanceKm(a, b) {
   const rad = d => d * Math.PI / 180;
@@ -30,7 +39,7 @@ function taxiInfo(poi) {
   if (poi.taxi) {
     return { km, minutes, ...poi.taxi, forfait: true,
              jourTxt: poi.taxi.jour === 0 ? "Inclus" : `~${poi.taxi.jour} MAD`,
-             nuitTxt: poi.taxi.nuit ? `~${poi.taxi.nuit} MAD` : "—" };
+             nuitTxt: poi.taxi.nuit ? `~${poi.taxi.nuit} MAD` : "sans objet" };
   }
   const base = Math.max(MINI, km * TARIF_KM);
   const jour = round5(base);
@@ -46,6 +55,8 @@ function taxiInfo(poi) {
 }
 
 const fmtPrix = n => n ? "€".repeat(n) : "Gratuit";
+const fmtNote = n => n.toFixed(1).replace(".", ",");
+const fmtKm = n => n.toFixed(1).replace(".", ",");
 
 /* =====================================================================
    Visuels : motif zellige généré (toujours disponible, même hors ligne)
@@ -182,6 +193,8 @@ const carteDispo = typeof L !== "undefined";
    l'app doit rester utilisable : on affiche un repli et la liste continue de vivre. */
 function replisCarte() {
   const el = document.getElementById("map");
+  const c = document.getElementById("map-load");
+  if (c) c.hidden = true;
   el.innerHTML = `<div style="height:100%;display:grid;place-items:center;text-align:center;
       padding:24px;color:#7A6A5D;font-size:14px;line-height:1.6">
       <div><div style="font-size:30px">🗺️</div>
@@ -194,9 +207,21 @@ function initCarte() {
   map = L.map("map", { zoomControl: false, attributionControl: true })
          .setView([HOTEL.lat, HOTEL.lng], 13);
   L.control.zoom({ position: "bottomright" }).addTo(map);
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+  const sombre = matchMedia("(prefers-color-scheme: dark)");
+  /* Fond de carte accordé au thème : un plan blanc dans une interface sombre
+     éblouit, typiquement le soir sur une terrasse. */
+  const fond = t => `https://{s}.basemaps.cartocdn.com/${t ? "dark_all" : "rastertiles/voyager"}/{z}/{x}/{y}{r}.png`;
+  let tuiles = L.tileLayer(fond(sombre.matches), {
     maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO'
   }).addTo(map);
+  sombre.addEventListener("change", e => {
+    map.removeLayer(tuiles);
+    tuiles = L.tileLayer(fond(e.matches), { maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO' }).addTo(map);
+  });
+
+  const chargement = document.getElementById("map-load");
+  tuiles.on("load", () => { if (chargement) chargement.hidden = true; });
+  setTimeout(() => { if (chargement) chargement.hidden = true; }, 6000);
 
   L.marker([HOTEL.lat, HOTEL.lng], {
     zIndexOffset: 1000,
@@ -255,24 +280,29 @@ function filtrer() {
 
 function carteHTML(p) {
   const t = p._taxi;
+  const dedans = favoris.has(p.id);
   return `
-    <button class="card${etat.actif === p.id ? " actif" : ""}" data-id="${p.id}">
+    <article class="card${etat.actif === p.id ? " actif" : ""}">
+      <button class="card-main" data-id="${p.id}">
       <div class="thumb"><img alt="" loading="lazy" data-poi="${p.id}"></div>
       <div class="card-body">
         <h3>${p.nom}</h3>
         <div class="meta">
-          <span class="note"><b>★</b> ${p.note.toFixed(1)}</span>
-          <span>·</span><span>${p.avis} avis</span>
-          <span>·</span><span>${fmtPrix(p.prix)}</span>
+          <span class="note" title="Note du guide"><b>★</b> ${fmtNote(p.note)}</span>
+          <span aria-hidden="true">·</span><span>${fmtPrix(p.prix)}</span>
+          <span aria-hidden="true">·</span><span>${p.duree}</span>
         </div>
         <div class="meta">
           <span class="tag">${CATEGORIES[p.cat].icon} ${CATEGORIES[p.cat].label}</span>
           <span class="taxi-badge">🚕 ${t.forfait && t.jour === 0 ? "inclus" : t.jourTxt.replace(" MAD", "")} <span style="opacity:.7;font-weight:600">MAD</span></span>
         </div>
       </div>
-      <span class="fav${favoris.has(p.id) ? " on" : ""}" data-fav="${p.id}" role="button"
-            aria-label="Ajouter à la wishlist">${favoris.has(p.id) ? "♥" : "♡"}</span>
-    </button>`;
+      </button>
+      <button class="fav${dedans ? " on" : ""}" data-fav="${p.id}"
+              aria-pressed="${dedans}"
+              aria-label="${dedans ? "Retirer" : "Ajouter"} ${p.nom} ${dedans ? "de" : "à"} la wishlist"
+      >${dedans ? "♥" : "♡"}</button>
+    </article>`;
 }
 
 function rendreListe() {
@@ -280,14 +310,25 @@ function rendreListe() {
   const liste = $("#liste");
   if (!res.length) {
     liste.innerHTML = etat.wishlist
-      ? `<div class="vide"><span class="e">♡</span>Votre wishlist est vide.<br>Touchez le cœur sur une adresse pour la garder de côté et voir le budget taxi de la semaine.</div>`
-      : `<div class="vide"><span class="e">🔍</span>Rien ne correspond.<br>Essayez un autre mot ou changez de catégorie.</div>`;
+      ? `<div class="vide"><span class="e">♡</span>
+           <p>Votre wishlist est vide.<br>Touchez le cœur sur une adresse pour la garder
+           de côté et voir le budget taxi de la semaine.</p>
+           <button class="btn-vide" id="vide-cta">Parcourir les 65 adresses</button></div>`
+      : `<div class="vide"><span class="e">🔍</span>
+           <p>Rien ne correspond à « ${etat.q} ».<br>Essayez un autre mot ou changez de catégorie.</p>
+           <button class="btn-vide" id="vide-cta">Tout réafficher</button></div>`;
+    const cta = $("#vide-cta");
+    if (cta) cta.onclick = reinitialiser;
   } else {
-    liste.innerHTML = res.map(carteHTML).join("");
+    liste.innerHTML = res.map(carteHTML).join("") + `
+      <p class="source">Notes attribuées par ce guide, ce ne sont pas des moyennes
+      d'avis en ligne. Prix de taxi estimés à partir de la distance depuis l'hôtel,
+      à négocier avant de monter.</p>`;
     $$("#liste img[data-poi]").forEach(img => peupleImage(img, parId[img.dataset.poi]));
   }
 
-  $("#compte").textContent = res.length + (res.length > 1 ? " adresses" : " adresse");
+  $("#compte").textContent = res.length === 0 ? "aucune adresse"
+    : res.length + (res.length > 1 ? " adresses" : " adresse");
   $("#titre-liste").textContent = etat.wishlist
     ? "Ma wishlist"
     : etat.cat === "tous" ? "Tout Marrakech" : CATEGORIES[etat.cat].label;
@@ -303,6 +344,20 @@ function rendreListe() {
 
   majVisibilite();
   majCompteurFav();
+}
+
+function reinitialiser() {
+  etat.q = ""; $("#q").value = ""; majClear();
+  etat.cat = "tous"; etat.wishlist = false;
+  $("#btn-wishlist").classList.remove("on");
+  $("#btn-wishlist").setAttribute("aria-pressed", "false");
+  $$("#filtres .chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === "tous")));
+  $("#filtres").scrollLeft = 0;
+  rendreListe();
+}
+
+function majClear() {
+  $("#q-clear").hidden = !$("#q").value;
 }
 
 function majCompteurFav() {
@@ -351,8 +406,8 @@ function ouvrirDetail(id, recentre = true) {
           <div class="kicker">${CATEGORIES[p.cat].icon} ${CATEGORIES[p.cat].label}</div>
           <h2>${p.nom}</h2>
           <div class="meta">
-            <span class="note"><b>★</b> ${p.note.toFixed(1)}</span>
-            <span>${p.avis} avis</span><span>·</span>
+            <span class="note"><b>★</b> ${fmtNote(p.note)}<small> note du guide</small></span>
+            <span aria-hidden="true">·</span>
             <span>${fmtPrix(p.prix)}</span>
           </div>
         </div>
@@ -360,12 +415,13 @@ function ouvrirDetail(id, recentre = true) {
 
       <div class="stats">
         <div class="stat"><div class="k">Durée</div><div class="v">${p.duree}</div></div>
-        <div class="stat"><div class="k">Distance</div><div class="v">${t.km.toFixed(1)} km</div></div>
-        <div class="stat"><div class="k">Trajet</div><div class="v">${t.minutes} min</div></div>
+        <div class="stat"><div class="k">Distance</div><div class="v">${fmtKm(t.km)} km</div></div>
+        <div class="stat"><div class="k">Trajet</div><div class="v">${t.minutes} min<small> en taxi</small></div></div>
+        ${marche ? `<div class="stat"><div class="k">À pied</div><div class="v">${Math.round(t.km / 4.5 * 60)} min<small> de marche</small></div></div>` : ""}
       </div>
 
       <div class="taxi-card">
-        <div class="hd">🚕 Taxi depuis le Riu Tikida Garden</div>
+        <div class="hd">🚕 Taxi depuis le Riu Tikida Garden <span class="hd-note">estimation</span></div>
         <div class="taxi-grid">
           <div><div class="k">Journée</div><div class="v">${t.jourTxt}</div></div>
           <div><div class="k">Après 21 h</div><div class="v">${t.nuitTxt}</div></div>
@@ -401,33 +457,49 @@ function ouvrirDetail(id, recentre = true) {
     </div>`;
 
   peupleImage($("#d-hero"), p, true);
-  $("#detail").classList.add("open");
+  const d = $("#detail");
+  d.classList.add("open");
+  d.setAttribute("aria-modal", "true");
+  d.setAttribute("role", "dialog");
+  d.setAttribute("aria-label", p.nom);
   document.body.style.overflow = "hidden";
+  focusAvant = document.activeElement;
+  setTimeout(() => $("#d-close").focus(), 60);
 
   $("#d-close").onclick = fermerDetail;
   $("#d-fav").onclick = () => basculeFav(p.id);
   $("#d-go").onclick = () => ouvrirGuidage(p);
-  $("#d-map").onclick = () => { fermerDetail(); carteDispo && map.flyTo([p.lat, p.lng], 16, { duration: .8 }); };
+  $("#d-map").onclick = () => { fermerDetail(); allerA(p.lat, p.lng, 16); };
   $("#d-share").onclick = () => partager(p);
 
-  if (!carteDispo) {} else if (recentre) map.flyTo([p.lat, p.lng], Math.max(map.getZoom(), 15), { duration: .8 });
-  else if (carteDispo) map.panTo([p.lat, p.lng], { animate: true });
+  if (recentre) allerA(p.lat, p.lng, Math.max(carteDispo ? map.getZoom() : 15, 15));
+  else if (carteDispo) map.panTo([p.lat, p.lng], { animate: !mouvementReduit.matches });
 
   history.replaceState(null, "", "#" + p.id);
   rendreListe();
 }
 
+let focusAvant = null;
+
 function fermerDetail() {
-  $("#detail").classList.remove("open");
+  const d = $("#detail");
+  d.classList.remove("open");
+  d.removeAttribute("aria-modal");
   document.body.style.overflow = "";
   const a = etat.actif; etat.actif = null;
   if (a) rafraichirMarqueur(a);
   history.replaceState(null, "", location.pathname);
   rendreListe();
+  /* la liste est re-rendue à la fermeture : le noeud d'origine n'existe plus,
+     on rend donc le focus à la carte correspondante, pas au body */
+  const cible = (a && $(`.card-main[data-id="${a}"]`))
+    || (focusAvant && document.contains(focusAvant) ? focusAvant : null);
+  if (cible) cible.focus({ preventScroll: false });
+  focusAvant = null;
 }
 
 async function partager(p) {
-  const txt = `${p.nom} — ${CATEGORIES[p.cat].label} à Marrakech\n★ ${p.note}/5 · taxi depuis l'hôtel ~${p._taxi.jourTxt}\nhttps://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
+  const txt = `${p.nom} : ${CATEGORIES[p.cat].label} à Marrakech\n★ ${fmtNote(p.note)}/5 selon ce guide · taxi depuis l'hôtel ~${p._taxi.jourTxt}\nhttps://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   if (navigator.share) { try { await navigator.share({ title: p.nom, text: txt }); return; } catch {} }
   try { await navigator.clipboard.writeText(txt); toast("Copié dans le presse-papier"); }
   catch { toast("Impossible de partager"); }
@@ -438,7 +510,7 @@ async function partagerWishlist() {
   if (!liste.length) return;
   const total = liste.reduce((s, p) => s + p._taxi.jour, 0);
   const txt = "Notre semaine à Marrakech\n\n" +
-    liste.map(p => `• ${p.nom} (${CATEGORIES[p.cat].label}, ★${p.note}) — taxi ~${p._taxi.jourTxt}\n  https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`).join("\n") +
+    liste.map(p => `• ${p.nom} (${CATEGORIES[p.cat].label}, ★${fmtNote(p.note)} selon ce guide) : taxi ~${p._taxi.jourTxt}\n  https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`).join("\n") +
     `\n\nBudget taxi aller simple : ~${Math.round(total / 10) * 10} MAD`;
   if (navigator.share) { try { await navigator.share({ title: "Wishlist Marrakech", text: txt }); return; } catch {} }
   try { await navigator.clipboard.writeText(txt); toast("Wishlist copiée"); }
@@ -457,6 +529,13 @@ function ouvrirGuidage(p) {
   $("#nav-sub").textContent = `${p._taxi.km.toFixed(1)} km · environ ${p._taxi.minutes} min de trajet`;
   menu.classList.add("open");
   majLiensGuidage();
+  setTimeout(() => $("#nav-gmaps").focus(), 60);
+}
+
+function fermerGuidage() {
+  $("#nav-menu").classList.remove("open");
+  const b = $("#d-go");
+  if (b) b.focus();
 }
 
 function origine() {
@@ -533,19 +612,34 @@ function initSheet() {
    Divers UI
    ===================================================================== */
 let toastT;
-function toast(msg) {
+/* Un toast porteur d'une action annulable expose cette action en bouton,
+   et reste affiché plus longtemps pour laisser le temps de l'attraper. */
+function toast(msg, action) {
   const el = $("#toast");
-  el.textContent = msg; el.classList.add("show");
+  el.innerHTML = "";
+  el.classList.toggle("centre", !action);
+  const span = document.createElement("span");
+  span.className = "toast-msg";
+  span.textContent = msg;
+  el.append(span);
+  if (action) {
+    const b = document.createElement("button");
+    b.className = "toast-action";
+    b.textContent = action.label;
+    b.onclick = () => { el.classList.remove("show"); action.run(); };
+    el.append(b);
+  }
+  el.classList.add("show");
   clearTimeout(toastT);
-  toastT = setTimeout(() => el.classList.remove("show"), 2200);
+  toastT = setTimeout(() => el.classList.remove("show"), action ? 7000 : 2600);
 }
 
 function initFiltres() {
   const wrap = $("#filtres");
-  const cats = [["tous", { label: "Tout", icon: "✳️" }], ...Object.entries(CATEGORIES)];
+  const cats = [["tous", { label: "Tout", icon: "" }], ...Object.entries(CATEGORIES)];
   wrap.innerHTML = cats.map(([k, v]) =>
     `<button class="chip" data-cat="${k}" aria-pressed="${k === "tous"}">
-       <span class="e">${v.icon}</span>${v.label}</button>`).join("");
+       ${v.icon ? `<span class="e" aria-hidden="true">${v.icon}</span>` : ""}${v.label}</button>`).join("");
   wrap.addEventListener("click", e => {
     const b = e.target.closest("[data-cat]"); if (!b) return;
     etat.cat = b.dataset.cat; etat.wishlist = false;
@@ -559,21 +653,25 @@ function initEvenements() {
   $("#liste").addEventListener("click", e => {
     const f = e.target.closest("[data-fav]");
     if (f) { e.stopPropagation(); basculeFav(f.dataset.fav); return; }
-    const c = e.target.closest(".card");
+    const c = e.target.closest(".card-main");
     if (c) ouvrirDetail(c.dataset.id);
   });
 
   const input = $("#q");
-  input.addEventListener("input", () => { etat.q = input.value; rendreListe(); });
-  $("#q-clear").addEventListener("click", () => { input.value = ""; etat.q = ""; rendreListe(); input.focus(); });
+  input.addEventListener("input", () => { etat.q = input.value; majClear(); rendreListe(); });
+  majClear();
+  $("#q-clear").addEventListener("click", () => {
+    input.value = ""; etat.q = ""; majClear(); rendreListe(); input.focus();
+  });
 
   $("#btn-wishlist").addEventListener("click", () => {
     etat.wishlist = !etat.wishlist;
     $("#btn-wishlist").classList.toggle("on", etat.wishlist);
+    $("#btn-wishlist").setAttribute("aria-pressed", String(etat.wishlist));
     if (etat.wishlist) {
       $$("#filtres .chip").forEach(c => c.setAttribute("aria-pressed", "false"));
       $("#sheet").classList.remove("peek");
-      $("#filtres").scrollTo({ left: 0, behavior: "smooth" });
+      $("#filtres").scrollLeft = 0;
     } else {
       etat.cat = "tous";
       $$("#filtres .chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.cat === "tous")));
@@ -584,15 +682,22 @@ function initEvenements() {
   $("#wl-share").addEventListener("click", partagerWishlist);
   $("#wl-clear").addEventListener("click", () => {
     if (!favoris.size) return;
-    if (!confirm("Vider complètement la wishlist ?")) return;
     const ids = [...favoris];
     favoris.clear(); sauveFav();
     ids.forEach(rafraichirMarqueur);
-    rendreListe(); toast("Wishlist vidée");
+    rendreListe();
+    toast(`${ids.length} adresse${ids.length > 1 ? "s retirées" : " retirée"}`, {
+      label: "Annuler",
+      run: () => {
+        ids.forEach(id => favoris.add(id));
+        sauveFav(); ids.forEach(rafraichirMarqueur); rendreListe();
+        toast("Wishlist restaurée");
+      }
+    });
   });
 
   $("#btn-hotel").addEventListener("click", () => {
-    if (carteDispo) map.flyTo([HOTEL.lat, HOTEL.lng], 15, { duration: .8 });
+    allerA(HOTEL.lat, HOTEL.lng, 15);
     toast("Riu Tikida Garden, votre camp de base");
   });
 
@@ -603,11 +708,14 @@ function initEvenements() {
   });
 
   $("#nav-menu").addEventListener("click", e => {
-    if (e.target.id === "nav-menu" || e.target.closest("[data-close]")) $("#nav-menu").classList.remove("open");
+    if (e.target.id === "nav-menu" || e.target.closest("[data-close]")) fermerGuidage();
   });
   $$(".nav-from button").forEach(b => b.addEventListener("click", () => {
     if (b.dataset.from === "moi" && !etat.maPosition) return demanderPosition();
     etat.origine = b.dataset.from; majLiensGuidage();
+  }));
+  $$("#nav-menu a").forEach(a => a.addEventListener("click", () => {
+    setTimeout(() => $("#nav-menu").classList.remove("open"), 150);
   }));
   $("#nav-copy").addEventListener("click", async () => {
     if (!poiGuide) return;
@@ -617,7 +725,7 @@ function initEvenements() {
 
   addEventListener("keydown", e => {
     if (e.key !== "Escape") return;
-    if ($("#nav-menu").classList.contains("open")) $("#nav-menu").classList.remove("open");
+    if ($("#nav-menu").classList.contains("open")) fermerGuidage();
     else if ($("#detail").classList.contains("open")) fermerDetail();
   });
 
@@ -627,7 +735,19 @@ function initEvenements() {
 /* =====================================================================
    Démarrage
    ===================================================================== */
+function suivreReseau() {
+  const maj = () => {
+    const off = !navigator.onLine;
+    $("#offline").hidden = !off;
+    if (off) toast("Hors ligne : la carte et les photos déjà consultées restent disponibles.");
+  };
+  addEventListener("online", maj);
+  addEventListener("offline", maj);
+  $("#offline").hidden = navigator.onLine;
+}
+
 function demarrer() {
+  suivreReseau();
   initCarte();
   initFiltres();
   initSheet();

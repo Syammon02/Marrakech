@@ -1,11 +1,12 @@
 /* ==========================================================================
-   Marrakech — direction artistique : ocre, zellige, safran, cèdre.
+   Marrakech, direction artistique : ocre, zellige, safran, cèdre.
    ========================================================================== */
 
 :root{
   --sable:#F6EDDF;
   --sable-2:#EFE1CD;
   --parchemin:#FDF8F1;
+  --clair:#FDF8F1;   /* toujours clair : texte et bordures sur fond nuit */
   --terre:#C1543A;
   --terre-fonce:#9C3F2B;
   --zellige:#1F6F78;
@@ -15,8 +16,10 @@
   --nuit:#241611;
   --nuit-2:#3A2A21;
   --encre:#2B1B12;
-  --gris:#7A6A5D;
+  --gris:#6B5B4E;
   --ligne:rgba(43,27,18,.12);
+  --surface:#FFFFFF;
+  --fond-carte:#E8DCC8;
   --ombre:0 2px 8px rgba(43,27,18,.08), 0 12px 32px rgba(43,27,18,.10);
   --ombre-forte:0 -4px 32px rgba(43,27,18,.18);
   --r:16px;
@@ -30,7 +33,7 @@
 *,*::before,*::after{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; font-family:var(--sans); color:var(--encre);
+  margin:0; overflow-x:hidden; font-family:var(--sans); color:var(--encre);
   background:var(--sable);
   -webkit-font-smoothing:antialiased;
   overscroll-behavior:none;
@@ -39,6 +42,8 @@ button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
 a{color:inherit}
 img{max-width:100%;display:block}
 :focus-visible{outline:2px solid var(--zellige);outline-offset:2px;border-radius:6px}
+/* sur les surfaces sombres, le safran ressort mieux que le bleu zellige */
+.topbar :focus-visible,.hero :focus-visible,.intro :focus-visible{outline-color:var(--safran)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 /* ----- Motif zellige réutilisable ----- */
@@ -55,19 +60,22 @@ img{max-width:100%;display:block}
 .app{
   display:grid; height:100dvh; width:100%;
   grid-template-rows:auto 1fr;
+  /* colonne bornée : sans cela la grille prend la largeur max-content de la
+     barre de filtres et toute la page devient scrollable horizontalement */
+  grid-template-columns:minmax(0, 1fr);
 }
 @media (min-width:900px){
   .app{grid-template-columns:400px 1fr; grid-template-rows:auto 1fr;
        grid-template-areas:"head head" "panel map";}
   .topbar{grid-area:head}
-  #map{grid-area:map}
+  .map-wrap{grid-area:map}
   .sheet{grid-area:panel}
 }
 
 /* ==========================  TOPBAR  =================================== */
 .topbar{
   position:relative; z-index:900;
-  color:var(--parchemin);
+  color:var(--clair);
   padding:calc(env(safe-area-inset-top,0px) + 10px) 12px 10px;
   box-shadow:0 2px 14px rgba(36,22,17,.30);
 }
@@ -87,7 +95,7 @@ img{max-width:100%;display:block}
   text-transform:uppercase;opacity:.62;margin-top:2px}
 .brand .spacer{flex:1}
 .icon-btn{
-  width:38px;height:38px;flex:none;border-radius:11px;display:grid;place-items:center;
+  width:44px;height:44px;flex:none;border-radius:11px;display:grid;place-items:center;
   background:rgba(255,255,255,.10);transition:background .15s, transform .1s;position:relative;
 }
 .icon-btn:active{transform:scale(.94)}
@@ -102,10 +110,10 @@ img{max-width:100%;display:block}
 
 /* recherche */
 .searchbar{display:flex;align-items:center;gap:8px;margin-top:10px;
-  background:rgba(255,255,255,.11);border-radius:12px;padding:0 10px;height:40px}
+  background:rgba(255,255,255,.11);border-radius:12px;padding:0 10px;height:46px}
 .searchbar svg{opacity:.6;flex:none}
 .searchbar input{
-  flex:1;min-width:0;background:none;border:0;color:var(--parchemin);
+  flex:1;min-width:0;background:none;border:0;color:var(--clair);
   font-size:15px;padding:0;height:100%;
 }
 .searchbar input::placeholder{color:rgba(253,248,241,.55)}
@@ -118,16 +126,24 @@ img{max-width:100%;display:block}
 }
 .filters::-webkit-scrollbar{display:none}
 .chip{
-  flex:none;display:inline-flex;align-items:center;gap:5px;height:32px;padding:0 12px;
-  border-radius:16px;background:rgba(255,255,255,.10);color:var(--parchemin);
-  font-size:13px;font-weight:500;white-space:nowrap;transition:.15s;
+  flex:none;display:inline-flex;align-items:center;gap:5px;height:44px;padding:0 15px;
+  border-radius:16px;background:rgba(255,255,255,.10);color:var(--clair);
+  font-size:13px;font-weight:500;white-space:nowrap;
+  transition:background-color .15s, color .15s;
   border:1px solid transparent;
 }
-.chip[aria-pressed="true"]{background:var(--parchemin);color:var(--nuit);font-weight:700}
+.chip[aria-pressed="true"]{background:var(--clair);color:var(--nuit);font-weight:700}
 .chip .e{font-size:14px;line-height:1}
 
 /* ==========================  CARTE  ==================================== */
-#map{width:100%;height:100%;background:#E8DCC8;z-index:1}
+.map-wrap{position:relative;min-height:0;min-width:0}
+#map{position:absolute;inset:0;background:var(--fond-carte);z-index:1}
+.map-load{
+  position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:400;
+  margin:0;background:var(--parchemin);color:var(--gris);border:1px solid var(--ligne);
+  padding:7px 14px;border-radius:20px;font-size:12.5px;font-weight:600;
+  box-shadow:0 2px 10px rgba(43,27,18,.12);
+}
 .leaflet-container{font-family:var(--sans)}
 .leaflet-control-attribution{font-size:9px;background:rgba(253,248,241,.78)!important}
 .leaflet-bar a{color:var(--encre)!important}
@@ -136,7 +152,7 @@ img{max-width:100%;display:block}
 /* épingles */
 .pin{
   width:34px;height:34px;border-radius:50% 50% 50% 6px;transform:rotate(-45deg);
-  display:grid;place-items:center;border:2px solid var(--parchemin);
+  display:grid;place-items:center;border:2px solid var(--clair);
   box-shadow:0 3px 8px rgba(43,27,18,.4);transition:transform .16s;
 }
 .pin span{transform:rotate(45deg);font-size:15px;line-height:1}
@@ -164,14 +180,15 @@ img{max-width:100%;display:block}
 }
 .sheet.peek{height:calc(112px + var(--safe-b))}
 .sheet.full{height:calc(100dvh - 92px)}
-.grabber{padding:8px 0 4px;display:grid;place-items:center;flex:none;touch-action:none;cursor:grab}
+.grabber{min-height:44px;padding:0;display:grid;place-items:center;flex:none;touch-action:none;cursor:grab}
 .grabber i{width:42px;height:5px;border-radius:3px;background:var(--ligne);display:block}
 .sheet-head{
   display:flex;align-items:baseline;gap:8px;padding:0 16px 8px;flex:none;
 }
 .sheet-head h2{font-family:var(--serif);font-weight:400;font-size:17px;margin:0}
 .sheet-head .n{font-size:12px;color:var(--gris)}
-.sheet-head .sort{margin-left:auto;font-size:12px;color:var(--zellige);font-weight:600}
+.sheet-head .sort{margin-left:auto;font-size:12.5px;color:var(--zellige);font-weight:700;
+  min-height:44px;display:inline-flex;align-items:center;padding:0 4px}
 .list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:0 12px calc(24px + var(--safe-b));
   overscroll-behavior:contain}
 
@@ -184,12 +201,16 @@ img{max-width:100%;display:block}
 
 /* ----- carte POI ----- */
 .card{
-  display:flex;gap:11px;padding:9px;margin-bottom:9px;border-radius:var(--r);
-  background:#fff;box-shadow:0 1px 3px rgba(43,27,18,.07);
+  display:flex;gap:6px;padding:9px;margin-bottom:9px;border-radius:var(--r);
+  background:var(--surface);box-shadow:0 1px 3px rgba(43,27,18,.07);
   border:1px solid rgba(43,27,18,.06);
-  text-align:left;width:100%;align-items:stretch;transition:.15s;
+  align-items:stretch;transition:.15s;
 }
-.card:active{transform:scale(.985)}
+.card-main{
+  display:flex;gap:11px;flex:1;min-width:0;text-align:left;align-items:stretch;
+  border-radius:11px;
+}
+.card:has(.card-main:active){transform:scale(.985)}
 .card.actif{border-color:var(--terre);box-shadow:0 0 0 2px rgba(193,84,58,.18)}
 .thumb{
   width:78px;flex:none;border-radius:11px;overflow:hidden;position:relative;
@@ -204,6 +225,15 @@ img{max-width:100%;display:block}
 .meta{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font-size:11.5px;color:var(--gris)}
 .note{display:inline-flex;align-items:center;gap:3px;font-weight:700;color:var(--encre)}
 .note b{color:var(--safran)}
+.note small{font-weight:500;font-size:11px;opacity:.75;margin-left:3px}
+.hd-note{
+  margin-left:auto;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--gris);font-weight:700;
+}
+.source{
+  margin:6px 4px 0;font-size:11.5px;line-height:1.55;color:var(--gris);
+  border-top:1px solid var(--ligne);padding-top:12px;
+}
 .tag{
   display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:7px;
   background:var(--sable);font-size:11px;font-weight:600;color:var(--nuit-2);
@@ -213,13 +243,21 @@ img{max-width:100%;display:block}
   background:rgba(31,111,120,.10);color:var(--zellige);font-size:11px;font-weight:700;
 }
 .card .fav{
-  align-self:flex-start;width:32px;height:32px;flex:none;border-radius:9px;
-  display:grid;place-items:center;font-size:15px;color:var(--gris);
-  background:var(--sable);transition:.15s;
+  align-self:center;width:44px;height:44px;flex:none;border-radius:12px;
+  display:grid;place-items:center;font-size:18px;color:#A8968A;
+  background:transparent;transition:.15s;
 }
+.card .fav:hover{background:var(--sable)}
+.card .fav:active{transform:scale(.9)}
 .card .fav.on{background:rgba(217,154,11,.16);color:var(--safran)}
 .vide{padding:34px 18px;text-align:center;color:var(--gris);font-size:14px;line-height:1.6}
 .vide .e{font-size:32px;display:block;margin-bottom:8px}
+.vide p{margin:0 0 14px}
+.btn-vide{
+  height:44px;padding:0 18px;border-radius:12px;background:var(--terre);color:#fff;
+  font-weight:700;font-size:14px;
+}
+.btn-vide:active{transform:scale(.97)}
 
 /* ==========================  FICHE DÉTAIL  ============================= */
 .detail{
@@ -267,6 +305,7 @@ img{max-width:100%;display:block}
 .stat{background:var(--sable);border-radius:12px;padding:10px 11px}
 .stat .k{font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--gris);font-weight:700}
 .stat .v{font-size:15px;font-weight:700;margin-top:3px;line-height:1.25}
+.stat .v small{font-weight:500;font-size:11px;color:var(--gris)}
 
 .taxi-card{
   margin:0 16px;border-radius:var(--r);overflow:hidden;border:1px solid rgba(31,111,120,.25);
@@ -290,7 +329,7 @@ img{max-width:100%;display:block}
 .actions{
   position:absolute;left:0;right:0;bottom:0;z-index:5;
   display:flex;gap:9px;padding:11px 14px calc(11px + var(--safe-b));
-  background:linear-gradient(to top,var(--parchemin) 62%,rgba(253,248,241,0));
+  background:linear-gradient(to top,var(--parchemin) 62%,transparent);
 }
 .btn{
   flex:1;height:50px;border-radius:14px;display:inline-flex;align-items:center;
@@ -299,7 +338,7 @@ img{max-width:100%;display:block}
 }
 .btn:active{transform:scale(.97)}
 .btn-primary{background:var(--terre);color:#fff;box-shadow:0 6px 18px rgba(193,84,58,.34)}
-.btn-ghost{background:var(--sable-2);color:var(--nuit);flex:none;width:50px}
+.btn-ghost{background:var(--sable-2);color:var(--encre);flex:none;width:50px}
 .btn-ghost.on{background:rgba(217,154,11,.2);color:var(--safran)}
 .btn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
@@ -322,7 +361,7 @@ img{max-width:100%;display:block}
   display:flex;align-items:center;gap:12px;width:100%;padding:13px;border-radius:13px;
   background:var(--sable);margin-bottom:8px;text-align:left;text-decoration:none;
 }
-.nav-opt .e{width:36px;height:36px;border-radius:10px;background:#fff;display:grid;
+.nav-opt .e{width:36px;height:36px;border-radius:10px;background:var(--surface);display:grid;
   place-items:center;font-size:18px;flex:none}
 .nav-opt b{display:block;font-size:14.5px}
 .nav-opt small{color:var(--gris);font-size:12px}
@@ -334,16 +373,33 @@ img{max-width:100%;display:block}
 /* toast */
 .toast{
   position:fixed;left:50%;bottom:calc(24px + var(--safe-b));transform:translate(-50%,20px);
-  z-index:1200;background:var(--nuit);color:var(--parchemin);padding:11px 17px;
+  z-index:1200;background:var(--nuit);color:var(--clair);padding:11px 17px;
   border-radius:12px;font-size:13.5px;font-weight:600;opacity:0;pointer-events:none;
   transition:.25s;max-width:88vw;text-align:center;box-shadow:var(--ombre);
+  display:flex;align-items:center;gap:14px;justify-content:center;
+}
+.toast-msg{flex:1;text-align:left}
+.toast.centre .toast-msg{text-align:center}
+.toast-action{
+  color:var(--safran);font-weight:700;font-size:13.5px;flex:none;
+  padding:6px 4px;text-decoration:underline;text-underline-offset:3px;
 }
 .toast.show{opacity:1;transform:translate(-50%,0)}
+
+/* bandeau hors ligne */
+.offline{
+  position:fixed;left:50%;transform:translateX(-50%);z-index:1150;
+  bottom:calc(78px + var(--safe-b));
+  background:var(--nuit);color:var(--clair);border:1px solid rgba(217,154,11,.45);
+  padding:8px 14px;border-radius:11px;font-size:12.5px;font-weight:600;
+  max-width:92vw;text-align:center;box-shadow:var(--ombre);
+}
+@media (min-width:900px){.offline{bottom:20px}}
 
 /* écran d'accueil */
 .intro{
   position:fixed;inset:0;z-index:1500;display:grid;place-items:center;
-  color:var(--parchemin);text-align:center;padding:26px;transition:opacity .5s;
+  color:var(--clair);text-align:center;padding:26px;transition:opacity .5s;
 }
 .intro.hide{opacity:0;pointer-events:none}
 .intro h1{font-family:var(--serif);font-weight:400;font-size:clamp(28px,9vw,44px);margin:14px 0 6px}
@@ -362,6 +418,55 @@ img{max-width:100%;display:block}
   font-size:12.5px;font-weight:600;color:var(--nuit-2);
 }
 .wl-actions button:active{transform:scale(.97)}
+
+/* Thème sombre : la charte ne change pas de teintes, seules les valeurs
+   s'inversent. L'app se consulte le soir, un fond crème plein écran éblouit. */
+@media (prefers-color-scheme: dark){
+  :root{
+    --sable:#1C1411;
+    --sable-2:#2A1E19;
+    --parchemin:#221A16;
+    --surface:#2C221D;
+    --fond-carte:#1C1411;
+    --encre:#F3E9DC;
+    --nuit-2:#E5D9CB;
+    --gris:#AD9C8E;
+    --ligne:rgba(243,233,220,.16);
+    --terre:#D4674C;
+    --zellige:#4FA5AE;
+    --menthe:#5CAE9C;
+    --ombre:0 2px 8px rgba(0,0,0,.4), 0 12px 32px rgba(0,0,0,.5);
+    --ombre-forte:0 -4px 32px rgba(0,0,0,.55);
+  }
+  .card{border-color:rgba(243,233,220,.10)}
+  .tag{background:var(--sable-2);color:var(--encre)}
+  .taxi-badge{background:rgba(79,165,174,.16)}
+  .taxi-card{border-color:rgba(79,165,174,.3);
+    background:linear-gradient(135deg,rgba(79,165,174,.10),rgba(217,154,11,.08))}
+  .taxi-card .hd{background:rgba(79,165,174,.16)}
+  .wl-actions button{background:var(--sable-2);color:var(--encre)}
+  .stat{background:var(--sable-2)}
+  .nav-opt{background:var(--sable-2)}
+  .nav-from button{background:var(--sable-2)}
+  .nav-from button[aria-pressed="true"]{background:var(--surface)}
+  .card .fav:hover{background:var(--sable-2)}
+  /* la terracotta est éclaircie en sombre : le texte repasse en encre foncée
+     pour tenir le 4,5:1 (blanc sur cette valeur tombe à 3,6:1) */
+  .btn-primary,.btn-vide,.icon-btn.on{color:var(--nuit)}
+  .leaflet-control-attribution{background:rgba(34,26,22,.8)!important}
+  .leaflet-control-attribution,.leaflet-control-attribution a{color:#C9BBAE!important}
+  .leaflet-bar a{background:var(--surface);color:var(--encre)!important;
+    border-bottom-color:var(--ligne)}
+}
+
+/* respect de la préférence système « moins de mouvement » */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{
+    animation-duration:.01ms!important;animation-iteration-count:1!important;
+    transition-duration:.01ms!important;scroll-behavior:auto!important;
+  }
+  .detail{transition:none}
+}
 
 /* écran très étroit (Galaxy Fold fermé, 280px) */
 @media (max-width:340px){

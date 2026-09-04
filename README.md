@@ -1,4 +1,4 @@
-# Marrakech — le guide de la semaine
+# Marrakech, le guide de la semaine
 
 Application web (PWA) pour une semaine à Marrakech, avec une carte interactive des
 meilleures adresses de la ville et des environs, et le coût du taxi calculé depuis
@@ -9,7 +9,7 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
 - **Carte interactive** : 65 adresses géolocalisées, épingles par catégorie, hôtel repéré.
 - **8 catégories** : restaurants, cafés, bars et rooftops, monuments, jardins, activités,
   souks et shopping, escapades à proximité (Agafay, Ourika, Imlil, Essaouira, Ouzoud…).
-- **Fiche complète** par adresse : photo, note, nombre d'avis, niveau de prix, durée
+- **Fiche complète** par adresse : photo, note du guide, niveau de prix, durée
   conseillée, description, conseils de terrain, horaires, coordonnées GPS.
 - **Coût du taxi** pour chaque adresse : tarif de journée et tarif après 21 h, calculés
   depuis l'hôtel. Les excursions lointaines utilisent un forfait grand taxi ou une
@@ -22,13 +22,20 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
 - **Tri et recherche** : par distance ou par note, recherche plein texte.
 - **PWA** : installable sur l'écran d'accueil, service worker, tuiles de carte et photos
   mises en cache pour survivre à une 4G capricieuse dans la médina.
+- **Thème clair et sombre** automatiques, selon la préférence du système, fond de carte
+  compris.
+- **Accessibilité** : navigation complète au clavier, cibles tactiles de 44 px minimum,
+  contrastes vérifiés au-dessus de 4,5:1 dans les deux thèmes, `prefers-reduced-motion`
+  respecté.
 - **Responsive** : du Galaxy Fold fermé (280 px) au bureau, avec bottom sheet à trois
   positions sur mobile et panneau latéral sur grand écran.
 
 ## Précision sur les données
 
-Les notes et le nombre d'avis sont des synthèses indicatives (guides et avis voyageurs),
-pas des données en temps réel. Les prix de taxi sont des **estimations** : environ
+Les notes sont l'**appréciation de ce guide**, sur 5, et l'interface le dit à l'écran.
+Ce ne sont pas des moyennes d'avis Google ou TripAdvisor, et aucun nombre d'avis n'est
+affiché : il n'existe pas de source vérifiable pour ces chiffres, donc ils ne sont pas
+inventés. Les prix de taxi sont des **estimations** : environ
 11 MAD du kilomètre routier en petit taxi négocié, minimum de course 40 MAD, majoration
 de 50 % après 21 h. Au compteur, c'est presque toujours moins cher. Négociez toujours
 avant de monter.
@@ -55,6 +62,7 @@ charge pas.
 ## Structure
 
 ```
+DESIGN.md                direction artistique, dials et justification des choix
 index.html               interface
 assets/style.css         direction artistique (ocre, zellige, safran)
 assets/app.js            logique : carte, filtres, wishlist, taxi, guidage

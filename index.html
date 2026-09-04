@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
-<title>Marrakech — le guide de la semaine</title>
+<title>Marrakech, le guide de la semaine</title>
 <meta name="description" content="Carte interactive des meilleures adresses de Marrakech : restaurants, cafés, rooftops, monuments, activités et escapades, avec le coût du taxi depuis le Riu Tikida Garden.">
 <meta name="theme-color" content="#241611">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -48,7 +48,7 @@
       <span class="spacer"></span>
       <button class="icon-btn" id="btn-install" hidden aria-label="Installer l'application">⤓</button>
       <button class="icon-btn" id="btn-hotel" aria-label="Revenir à l'hôtel">🏨</button>
-      <button class="icon-btn" id="btn-wishlist" aria-label="Ma wishlist">
+      <button class="icon-btn" id="btn-wishlist" aria-pressed="false" aria-label="Ma wishlist">
         ♥<span class="count" id="fav-count" hidden>0</span>
       </button>
     </div>
@@ -59,21 +59,24 @@
       </svg>
       <input id="q" type="search" placeholder="Chercher un tajine, un rooftop, un souk…"
              autocomplete="off" enterkeyhint="search">
-      <button id="q-clear" aria-label="Effacer">✕</button>
+      <button id="q-clear" aria-label="Effacer la recherche" hidden>✕</button>
     </label>
 
     <nav class="filters" id="filtres" aria-label="Catégories"></nav>
   </header>
 
   <!-- ---------- carte ---------- -->
-  <div id="map" role="application" aria-label="Carte de Marrakech"></div>
+  <div class="map-wrap">
+    <div id="map" role="application" aria-label="Carte de Marrakech"></div>
+    <p class="map-load" id="map-load" role="status">Chargement de la carte…</p>
+  </div>
 
   <!-- ---------- panneau liste ---------- -->
   <section class="sheet" id="sheet" aria-label="Liste des adresses">
     <div class="grabber" id="grabber" role="button" tabindex="0" aria-label="Agrandir ou réduire la liste"><i></i></div>
     <div class="sheet-head">
       <h2 id="titre-liste">Tout Marrakech</h2>
-      <span class="n" id="compte"></span>
+      <span class="n" id="compte" aria-live="polite"></span>
       <button class="sort" id="tri">⇅ Les plus proches</button>
     </div>
     <div class="wl-actions" id="wl-actions" hidden>
@@ -86,7 +89,7 @@
 </div>
 
 <!-- ---------- fiche détail ---------- -->
-<aside class="detail" id="detail" aria-label="Fiche de l'adresse"></aside>
+<aside class="detail" id="detail" role="dialog" aria-label="Fiche de l'adresse"></aside>
 
 <!-- ---------- menu guidage ---------- -->
 <div class="nav-menu" id="nav-menu" role="dialog" aria-modal="true" aria-label="Guidage">
@@ -120,6 +123,9 @@
   </div>
 </div>
 
+<div class="offline" id="offline" role="status" hidden>
+  Hors ligne : les fiches, les prix et la wishlist fonctionnent toujours
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"

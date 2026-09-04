@@ -1,4 +1,4 @@
-/* Service worker — coque hors ligne.
+/* Service worker : coque hors ligne.
    L'app doit rester consultable dans la médina, où la 4G tombe régulièrement. */
 const VERSION = "marrakech-v1";
 const COQUE = [
