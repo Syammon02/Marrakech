@@ -193,7 +193,10 @@ const etat = {
    adresse ou des horaires relevés priment toujours sur ce que j'avais écrit. */
 const enrichis = POIS.map(p => {
   const src = SOURCES[p.id] || {};
-  return { ...p, ...src, _src: !!SOURCES[p.id], _taxi: taxiInfo(p), _dist: distanceKm(HOTEL, p) };
+  /* « vérifié » veut dire qu'un fait a été relevé en ligne (adresse, horaires,
+     tarif, contact, note). Une entrée qui ne contient que mon avis ne compte pas. */
+  const verifie = !!(src.adresse || src.horaires || src.tarif || src.tel || src.site || src.avis);
+  return { ...p, ...src, _src: verifie, _taxi: taxiInfo(p), _dist: distanceKm(HOTEL, p) };
 });
 const parId = Object.fromEntries(enrichis.map(p => [p.id, p]));
 

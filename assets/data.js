@@ -34,7 +34,7 @@ export const POIS = [
   { id:"jemaa", nom:"Place Jemaa el-Fna", cat:"monument", lat:31.6258, lng:-7.9891,
     note:4.5, prix:0, duree:"1 h à 3 h",
     desc:"Le cœur battant de Marrakech, classée au patrimoine immatériel de l'UNESCO. Vide et écrasée de soleil l'après-midi, elle se remplit vers 18 h : charmeurs de serpents, conteurs, gnaouas, stands de jus d'orange et cuisines de rue montées en vingt minutes.",
-    tips:["Y aller au coucher du soleil, jamais à 14 h.","Toute photo d'un animal ou d'un artiste se paie : 20 MAD, sinon on n'approche pas.","Les stands de nourriture de la place sont folkloriques mais moyens : mieux vaut manger autour."],
+    tips:["Y aller au coucher du soleil, jamais à 14 h.","Toute photo d'un animal ou d'un artiste se paie : ayez de la petite monnaie, sinon on n'approche pas.","Les stands de nourriture de la place sont folkloriques mais moyens : mieux vaut manger autour."],
     horaires:"Permanent, magique de 18 h à minuit", reserver:false },
 
   { id:"koutoubia", nom:"Mosquée Koutoubia", cat:"monument", lat:31.6236, lng:-7.9934,
@@ -46,7 +46,7 @@ export const POIS = [
   { id:"bahia", nom:"Palais de la Bahia", cat:"monument", lat:31.6215, lng:-7.9829,
     note:4.4, prix:1, duree:"1 h",
     desc:"Palais de la fin du XIXe siècle construit pour le grand vizir Ba Ahmed : 150 pièces, huit hectares, des plafonds en cèdre peint et des cours à orangers. Le plus abouti des palais visitables de la médina.",
-    tips:["Ouvrir à 9 h pile pour avoir les patios à soi.","70 MAD l'entrée, guides à l'entrée facultatifs (négocier 100-150 MAD).","Se combine parfaitement avec Dar Si Said à 300 m."],
+    tips:["Ouvrir à 9 h pile pour avoir les patios à soi.","Des guides attendent à l'entrée, facultatifs et à négocier.","Se combine parfaitement avec Dar Si Said à 300 m."],
     horaires:"9 h - 17 h, tous les jours", reserver:false },
 
   { id:"badi", nom:"Palais El Badi", cat:"monument", lat:31.6183, lng:-7.9862,
@@ -100,7 +100,7 @@ export const POIS = [
   { id:"remparts", nom:"Remparts & Bab Doukkala", cat:"monument", lat:31.6330, lng:-7.9975,
     note:4.2, prix:0, duree:"1 h",
     desc:"19 km de murailles de pisé ocre du XIIe siècle, ponctuées de portes monumentales. Le tour en calèche depuis la place des Ferblantiers est le cliché assumé qui fonctionne quand même.",
-    tips:["Calèche : 150-250 MAD l'heure, à négocier avant de monter.","Meilleure lumière : une heure avant le coucher du soleil."],
+    tips:["Calèche à négocier avant de monter, jamais après.","Meilleure lumière : une heure avant le coucher du soleil."],
     horaires:"Permanent", reserver:false },
 
   /* ============ JARDINS ============ */
@@ -125,7 +125,7 @@ export const POIS = [
   { id:"menara", nom:"Jardins de la Ménara", cat:"jardin", lat:31.6136, lng:-8.0219,
     note:4.1, prix:0, duree:"1 h",
     desc:"Un immense bassin almohade bordé d'oliviers, avec le pavillon saadien et, les jours clairs, l'Atlas enneigé en arrière-plan. Simple, vaste, très fréquenté par les familles marrakchies le week-end.",
-    tips:["Entrée du parc gratuite, pavillon payant (30 MAD).","Fin d'après-midi : reflet de l'Atlas dans le bassin."],
+    tips:["Le parc est gratuit, seul le pavillon est payant.","Fin d'après-midi : reflet de l'Atlas dans le bassin."],
     horaires:"7 h - 18 h", reserver:false },
 
   { id:"cyberpark", nom:"Cyber Parc Arsat Moulay Abdeslam", cat:"jardin", lat:31.6255, lng:-7.9950,
@@ -137,7 +137,7 @@ export const POIS = [
   { id:"palmeraie", nom:"La Palmeraie", cat:"jardin", lat:31.6790, lng:-7.9500,
     note:3.9, prix:0, duree:"2 h",
     desc:"13 000 hectares de palmiers au nord de la ville, votre quartier. Balade à dromadaire au coucher du soleil, quads, buggies et clubs de plage-piscine. Touristique et assumé, mais tout est à cinq minutes de l'hôtel.",
-    tips:["Vous logez dedans : c'est l'activité la moins chère du séjour en taxi.","Dromadaire au coucher du soleil : 150-250 MAD par personne, à négocier."],
+    tips:["Vous logez dedans : c'est l'activité la moins chère du séjour en taxi.","Dromadaire au coucher du soleil, prix à négocier avant de monter."],
     horaires:"Permanent", reserver:false },
 
   /* ============ SOUKS & SHOPPING ============ */
@@ -150,7 +150,7 @@ export const POIS = [
   { id:"rahba", nom:"Rahba Lakdima (place aux épices)", cat:"souk", lat:31.6296, lng:-7.9873,
     note:4.4, prix:0, duree:"1 h",
     desc:"La petite place des herboristes et des vanniers, entourée de terrasses. Point de repère indispensable dans le dédale et un des meilleurs endroits pour observer sans être happé.",
-    tips:["Le Nomad et le Café des Épices donnent tous les deux dessus.","Bons paniers en palmier, 60-120 MAD après négociation."],
+    tips:["Le Nomad et le Café des Épices donnent tous les deux dessus.","Bons paniers en palmier, à négocier fermement."],
     horaires:"9 h - 19 h", reserver:false },
 
   { id:"soukelkhemis", nom:"Souk El Khemis (brocante)", cat:"souk", lat:31.6470, lng:-7.9820,
@@ -193,7 +193,7 @@ export const POIS = [
   { id:"daryacout", nom:"Dar Yacout", cat:"resto", lat:31.6355, lng:-7.9905,
     note:4.4, prix:4, duree:"3 h",
     desc:"Le grand dîner marocain à l'ancienne, dans un palais signé Bill Willis : apéritif sur le toit face à l'Atlas, puis descente vers une enfilade de salons pour un menu unique en dix services. Théâtral, cher, mémorable.",
-    tips:["Le soir à réserver plusieurs jours à l'avance, menu autour de 700-900 MAD.","Faites-vous déposer place Bab Doukkala, l'accès est un dédale de ruelles.","Tenue soignée."],
+    tips:["À réserver plusieurs jours à l'avance, menu unique et addition élevée.","Faites-vous déposer place Bab Doukkala, l'accès est un dédale de ruelles.","Tenue soignée."],
     horaires:"Dîner uniquement, 19 h 30 - 23 h, fermé lundi", reserver:true },
 
   { id:"foundouk", nom:"Le Foundouk", cat:"resto", lat:31.6320, lng:-7.9860,
@@ -211,7 +211,7 @@ export const POIS = [
   { id:"amal", nom:"Amal Association (restaurant solidaire)", cat:"resto", lat:31.6389, lng:-8.0142,
     note:4.7, prix:1, duree:"1 h",
     desc:"Une association qui forme des femmes en difficulté aux métiers de la restauration. Menu du jour qui change quotidiennement, cuisine familiale marocaine excellente, prix dérisoires, terrasse simple sous les arbres.",
-    tips:["Le meilleur rapport qualité-prix-sens du séjour. 60-90 MAD le plat.","Déjeuner uniquement, arriver avant 13 h.","Ils proposent aussi des cours de cuisine le matin, à réserver."],
+    tips:["Le meilleur rapport qualité-prix-sens du séjour.","Déjeuner uniquement, arriver avant 13 h.","Ils proposent aussi des cours de cuisine le matin, à réserver."],
     horaires:"12 h - 15 h 30", reserver:false },
 
   { id:"latrattoria", nom:"La Trattoria", cat:"resto", lat:31.6350, lng:-8.0090,
@@ -229,7 +229,7 @@ export const POIS = [
   { id:"mechoui", nom:"Mechoui Alley (Chez Lamine)", cat:"resto", lat:31.6266, lng:-7.9887,
     note:4.3, prix:1, duree:"45 min",
     desc:"La ruelle des fours à mechoui, juste au nord de Jemaa el-Fna : l'agneau cuit toute la nuit dans un four enterré, servi au poids avec du pain, du cumin et du sel. Debout ou sur un banc, sans chichi.",
-    tips:["Y aller vers 12 h 30 : à 14 h l'agneau est épuisé.","Demander un demi-kilo pour deux, environ 100-140 MAD.","L'expérience de rue la plus authentique de la ville."],
+    tips:["Y aller vers 12 h 30 : à 14 h l'agneau est épuisé.","On paie au poids : un demi-kilo suffit pour deux.","L'expérience de rue la plus authentique de la ville."],
     horaires:"11 h - 15 h", reserver:false },
 
   { id:"cafeclock", nom:"Café Clock (Kasbah)", cat:"resto", lat:31.6178, lng:-7.9877,
@@ -259,7 +259,7 @@ export const POIS = [
   { id:"beldi", nom:"Beldi Country Club", cat:"resto", lat:31.5822, lng:-8.0328,
     note:4.6, prix:4, duree:"Une journée",
     desc:"À 10 km au sud, une roseraie de trois hectares avec deux piscines, un hammam, des ateliers de tissage et un restaurant sous les oliviers. La journée d'échappée la plus civilisée depuis Marrakech.",
-    tips:["Day-pass piscine + déjeuner autour de 400-600 MAD par personne, à réserver.","Le meilleur plan pour la journée la plus chaude de la semaine.","Demander au taxi de revenir vous chercher à heure fixe."],
+    tips:["À réserver : les day pass partent vite le week-end.","Le meilleur plan pour la journée la plus chaude de la semaine.","Demander au taxi de revenir vous chercher à heure fixe."],
     horaires:"10 h - 19 h", reserver:true },
 
   /* ============ CAFÉS ============ */
@@ -340,71 +340,65 @@ export const POIS = [
   { id:"hammambains", nom:"Les Bains de Marrakech", cat:"activite", lat:31.6190, lng:-7.9868,
     note:4.5, prix:3, duree:"2 h",
     desc:"Spa haut de gamme de la Kasbah : hammam traditionnel, gommage au savon noir, enveloppement au ghassoul, massage à l'huile d'argan, piscine. Le rituel complet, en version confortable.",
-    tips:["Forfait hammam + gommage + massage 50 min : 700-900 MAD.","Réserver 48 h à l'avance.","À caler le jour où vous êtes épuisés par les souks, pas le premier jour."],
+    tips:["Le tarif dépend du nombre de soins enchaînés.","Réserver 48 h à l'avance.","À caler le jour où vous êtes épuisés par les souks, pas le premier jour."],
     horaires:"9 h - 20 h", reserver:true },
 
   { id:"hammamrose", nom:"Hammam de la Rose", cat:"activite", lat:31.6318, lng:-7.9930,
     note:4.6, prix:2, duree:"1 h 30",
     desc:"Hammam de quartier haut de gamme mais accessible, très bien noté, produits naturels et personnel formé. Le meilleur rapport qualité-prix de la médina pour un premier hammam.",
-    tips:["Gommage + massage autour de 400-500 MAD.","Réserver la veille, créneaux séparés hommes et femmes selon les heures."],
+    tips:["Formules bien moins chères que les grands spas.","Réserver la veille, créneaux séparés hommes et femmes selon les heures."],
     horaires:"10 h - 20 h", reserver:true },
 
   { id:"cuisineamal", nom:"Cours de cuisine (Amal / La Maison Arabe)", cat:"activite", lat:31.6330, lng:-7.9930,
     note:4.8, prix:2, duree:"3 h",
     desc:"Deux formules : chez Amal, atelier associatif simple et chaleureux le matin ; à La Maison Arabe, cours en cuisine professionnelle avec dada, tajine et pastilla, puis déjeuner de ce qu'on a préparé.",
-    tips:["Amal : environ 300 MAD, La Maison Arabe : 600-800 MAD.","Réserver 3-4 jours avant.","On repart avec les recettes et de quoi refaire un vrai tajine à Rouen."],
+    tips:["Deux niveaux de prix très différents selon la formule.","Réserver 3-4 jours avant.","On repart avec les recettes et de quoi refaire un vrai tajine à Rouen."],
     horaires:"Sessions à 9 h 30 et 15 h", reserver:true },
 
   { id:"calèche", nom:"Calèche autour des remparts", cat:"activite", lat:31.6215, lng:-7.9860,
     note:4.0, prix:2, duree:"1 h",
     desc:"Départ de la place des Ferblantiers ou de Jemaa el-Fna, tour des remparts, de la Ménara et de Gueliz. Kitsch, lent, et pourtant la meilleure façon de comprendre la géographie de la ville.",
-    tips:["Tarif officiel affiché : 150 MAD l'heure. Refuser au-delà de 250.","Vérifier l'état du cheval avant de monter, tous les cochers ne se valent pas."],
+    tips:["Fixez le prix avant de monter, les tarifs annoncés varient du simple au triple.","Vérifier l'état du cheval avant de monter, tous les cochers ne se valent pas."],
     horaires:"9 h - 20 h", reserver:false },
 
   { id:"montgolfiere", nom:"Vol en montgolfière", cat:"activite", lat:31.7550, lng:-7.9500,
     note:4.7, prix:4, duree:"4 h avec transferts",
     desc:"Décollage au lever du soleil au nord de la ville, une heure de vol au-dessus de la palmeraie, des villages berbères et de la plaine du Haouz avec l'Atlas en fond, puis petit-déjeuner sous tente.",
-    tips:["Environ 1 800-2 500 MAD par personne, transferts hôtel inclus dans le prix.","Départ vers 5 h 30 du matin, à caler en milieu de séjour.","Réserver au moins 3 jours avant, annulé si vent."],
+    tips:["Les transferts depuis l'hôtel sont compris dans le prix.","Départ vers 5 h 30 du matin, à caler en milieu de séjour.","Réserver au moins 3 jours avant, annulé si vent."],
     horaires:"Lever du soleil", reserver:true,
     taxi:{ jour:0, nuit:0, note:"Transfert aller-retour à l'hôtel inclus dans la prestation" } },
 
   { id:"quad", nom:"Quad & dromadaire en Palmeraie", cat:"activite", lat:31.6820, lng:-7.9460,
     note:4.3, prix:2, duree:"2 h",
     desc:"Circuits de quad ou de buggy dans les pistes de la palmeraie, souvent combinés avec une balade à dromadaire et un thé sous tente berbère. C'est juste derrière votre hôtel.",
-    tips:["2 h de quad : 400-600 MAD par personne, à négocier.","Prendre le créneau de fin d'après-midi, il fait moins chaud et la lumière est meilleure.","Lunettes et foulard indispensables, ça poussière sévèrement."],
+    tips:["Le prix se négocie sur place, comparez deux prestataires.","Prendre le créneau de fin d'après-midi, il fait moins chaud et la lumière est meilleure.","Lunettes et foulard indispensables, ça poussière sévèrement."],
     horaires:"9 h - 18 h", reserver:true },
-
-  { id:"nikki", nom:"Nikki Beach Marrakech", cat:"activite", lat:31.6968, lng:-8.0625,
-    note:4.1, prix:4, duree:"Une journée",
-    desc:"Beach club à piscine au nord-ouest de la ville : transats, DJ, champagne et déjeuner. Assumé, cher, festif, et à seulement une dizaine de minutes de la palmeraie.",
-    tips:["Minimum de consommation obligatoire pour un transat, 500-800 MAD par personne.","Le dimanche est la grosse journée.","Réserver, surtout en haute saison."],
-    horaires:"11 h - 19 h", reserver:true },
 
   { id:"golfamelkis", nom:"Golf d'Amelkis", cat:"activite", lat:31.5938, lng:-7.9541,
     note:4.4, prix:4, duree:"Une demi-journée",
     desc:"27 trous dessinés par Cabell Robinson, palmiers, oliviers et l'Atlas en toile de fond, sur la route de Ouarzazate. Un des plus beaux parcours du Maroc.",
-    tips:["Green fee 700-1 000 MAD, clubs en location sur place.","Réserver le départ, 7 h 30 en été."],
+    tips:["Clubs en location sur place, inutile d'emporter les vôtres.","Réserver le départ, 7 h 30 en été."],
     horaires:"7 h - 18 h", reserver:true },
 
   /* ============ ESCAPADES À PROXIMITÉ ============ */
   { id:"agafay", nom:"Désert d'Agafay", cat:"escapade", lat:31.4650, lng:-8.1520,
     note:4.5, prix:3, duree:"Demi-journée ou nuit",
     desc:"À 35 km, un désert de pierre et de collines lunaires avec l'Atlas en arrière-plan. Camps de tentes de luxe, dîner au coucher du soleil, feu, musique gnaoua et ciel étoilé. Ce n'est pas le Sahara, mais c'est à 45 minutes.",
-    tips:["Formule dîner + coucher de soleil : 500-800 MAD par personne avec transfert.","Nuit en camp : 1 200-3 000 MAD la tente.","Les nuits sont froides même en été, prendre une veste."],
+    tips:["Les camps assurent le transfert depuis l'hôtel, vérifiez-le avant de réserver.","Les nuits sont froides même en été, prendre une veste."],
     horaires:"Départ 16 h pour le coucher du soleil", reserver:true,
     taxi:{ jour:450, nuit:600, note:"Aller-retour grand taxi avec attente, ou transfert inclus dans la formule du camp" } },
 
   { id:"ourika", nom:"Vallée de l'Ourika & Setti Fatma", cat:"escapade", lat:31.2242, lng:-7.7929,
     note:4.4, prix:2, duree:"Une journée",
     desc:"À 65 km au sud, une vallée verte le long de l'oued, des villages berbères, des cafés-terrasses les pieds dans l'eau et la randonnée des sept cascades depuis Setti Fatma. L'échappée fraîcheur classique.",
-    tips:["Partir tôt, 8 h, pour éviter la foule du week-end.","Un guide local aux cascades : 100-150 MAD, utile car le sentier est glissant.","Chaussures fermées obligatoires."],
+    tips:["Partir tôt, 8 h, pour éviter la foule du week-end.","Un guide local aux cascades est utile, le sentier glisse.","Chaussures fermées obligatoires."],
     horaires:"Journée", reserver:false,
     taxi:{ jour:600, nuit:0, note:"Grand taxi à la journée avec chauffeur et attente, à négocier la veille" } },
 
   { id:"anima", nom:"Jardin Anima d'André Heller", cat:"escapade", lat:31.4556, lng:-7.9373,
     note:4.6, prix:2, duree:"3 h",
     desc:"À 27 km sur la route de l'Ourika, un jardin d'artiste onirique : sculptures de Keith Haring et Picasso, bambous, cactées géantes, salle vidéo souterraine et café-restaurant. Beaucoup moins couru que Majorelle et bien plus fort.",
-    tips:["Navette gratuite depuis le centre de Marrakech, à réserver sur leur site : ça remplace le taxi.","Le meilleur jardin des environs, très loin devant la Ménara.","Prévoir le déjeuner sur place, le Paul Bowles Café est bon."],
+    tips:["La navette aller-retour est comprise dans le billet, au départ du parking de la Koutoubia.","Le meilleur jardin des environs, très loin devant la Ménara.","Prévoir le déjeuner sur place, le Paul Bowles Café est bon."],
     horaires:"9 h - 17 h 30", reserver:true,
     taxi:{ jour:350, nuit:0, note:"Aller-retour avec attente, ou navette gratuite du jardin depuis le centre-ville" } },
 
@@ -418,7 +412,7 @@ export const POIS = [
   { id:"imlil", nom:"Imlil & Haut Atlas", cat:"escapade", lat:31.1370, lng:-7.9190,
     note:4.7, prix:3, duree:"Une journée",
     desc:"À 65 km, le village de départ des ascensions du Toubkal, à 1 740 m : sentiers muletiers, cascades, villages berbères en terrasses et déjeuner chez l'habitant. Vingt degrés de moins qu'en ville.",
-    tips:["Randonnée facile Imlil-Aroumd, 2 h aller-retour, faisable sans guide.","Prendre un guide local à Imlil pour aller plus haut : 300-400 MAD la journée.","Prévoir une polaire même en juin."],
+    tips:["Randonnée facile Imlil-Aroumd, 2 h aller-retour, faisable sans guide.","Prendre un guide local sur place pour monter plus haut.","Prévoir une polaire même en juin."],
     horaires:"Journée", reserver:false,
     taxi:{ jour:700, nuit:0, note:"Grand taxi à la journée avec chauffeur et attente" } },
 
@@ -427,14 +421,14 @@ export const POIS = [
     desc:"À 150 km au nord-est, 110 m de chutes en trois paliers, des macaques de Barbarie en liberté, des barques au pied des cascades et des restaurants en surplomb. Longue route, mais spectaculaire.",
     tips:["3 h de route à l'aller : départ 7 h impératif.","Passer par une excursion organisée est plus rentable qu'un taxi privé.","Ne pas nourrir les singes."],
     horaires:"Journée complète", reserver:true,
-    taxi:{ jour:900, nuit:0, note:"Excursion organisée en minibus 250-400 MAD/pers., bien plus rentable que le taxi privé" } },
+    taxi:{ jour:900, nuit:0, note:"Excursion organisée à 25-45 € par personne, déjeuner compris : bien plus rentable que le taxi privé" } },
 
   { id:"essaouira", nom:"Essaouira", cat:"escapade", lat:31.5085, lng:-9.7595,
     note:4.7, prix:3, duree:"Journée ou 2 jours",
     desc:"À 175 km, la cité portuaire fortifiée d'Orson Welles et de Jimi Hendrix : remparts blancs et bleus, port de pêche, poissons grillés sur le quai, plage de kitesurf et médina classée UNESCO. Le contrepoint parfait à la chaleur de Marrakech.",
-    tips:["2 h 30 de route par une bonne autoroute. Bus Supratours ou CTM : 100-140 MAD l'aller.","Si vous avez une seule escapade à faire, hésitez entre celle-ci et l'Atlas.","Idéalement y dormir une nuit plutôt que faire l'aller-retour."],
+    tips:["3 h de route. Supratours dépose en plein centre, CTM non.","Si vous avez une seule escapade à faire, hésitez entre celle-ci et l'Atlas.","Idéalement y dormir une nuit plutôt que faire l'aller-retour."],
     horaires:"Journée complète", reserver:false,
-    taxi:{ jour:1400, nuit:0, note:"Taxi privé aller-retour. Bus Supratours 100-140 MAD l'aller : très largement préférable" } }
+    taxi:{ jour:1400, nuit:0, note:"Taxi privé aller-retour. Le bus est très largement préférable : 90 MAD chez CTM, 100 à 140 MAD chez Supratours" } }
 ];
 
 /* Photos : slug d'article Wikipédia. L'app charge la vignette via l'API REST de
@@ -608,5 +602,192 @@ export const SOURCES = {
   hammamrose: {
     tarif: "environ 300 à 500 MAD selon la formule",
     monAvis: "Moitié moins cher que les grands spas pour un rituel très correct. C'est le bon premier hammam si vous n'en avez jamais fait."
+  },
+  /* ---- seconde vague de vérifications ---- */
+  jemaa: {
+    monAvis: "Inscrite au patrimoine mondial depuis 1985, et son espace culturel au patrimoine immatériel (proclamé en 2001, inscrit en 2008). Concrètement : elle est vide et écrasée de soleil l'après-midi, et elle devient un spectacle à partir de 18 h. N'y allez pas à 14 h, vous ne comprendriez pas ce que les gens lui trouvent."
+  },
+  koutoubia: {
+    monAvis: "Minaret almohade de 77 m achevé vers 1199 sous Yacoub al-Mansour. L'intérieur est fermé aux non-musulmans, alors visez les jardins côté sud une heure avant le coucher du soleil : c'est le plus beau cliché de la ville, et c'est gratuit."
+  },
+  darelbacha: {
+    adresse: "Rue Dar el Bacha, quartier Mouassine, médina",
+    horaires: "10 h - 18 h, fermé le lundi",
+    tarif: "60 MAD étrangers, 25 MAD nationaux, 15 MAD moins de 18 ans (tarifs relevés en 2024)",
+    monAvis: "Visite du palais puis café dans l'aile du Bacha Coffee : c'est la meilleure heure et demie de la médina, et ça tombe bien, tout est dans le même bâtiment. Fermé le lundi, ne calez pas votre journée musées ce jour-là."
+  },
+  maisonphoto: {
+    adresse: "46 rue Ahal Fès, médina, près de la médersa Ben Youssef",
+    horaires: "9 h 30 - 19 h, tous les jours",
+    tarif: "50 MAD, gratuit pour les moins de 15 ans",
+    monAvis: "Trois étages de tirages de 1870 à 1950 dans un ancien fondouk, et presque personne. C'est le musée à garder en réserve pour l'heure où la médina sature, et sa terrasse fait un déjeuner calme avec vue sur l'Atlas."
+  },
+  darsisaid: {
+    horaires: "10 h - 18 h, fermé le mardi",
+    tarif: "30 MAD adulte, 10 MAD moins de 12 ans",
+    monAvis: "30 MAD pour la meilleure collection de tapis et de bois sculpté du pays, c'est l'entrée la moins chère de la médina. Faites-le avant d'acheter un tapis : vous saurez lire les motifs et vous négocierez autrement."
+  },
+  menara: {
+    horaires: "Jardins 8 h - 19 h, pavillon 9 h - 17 h",
+    tarif: "Jardins gratuits, pavillon 50 MAD adulte, 20 MAD moins de 12 ans",
+    monAvis: "Honnêtement, c'est un grand bassin et des oliviers : on y va pour le reflet de l'Atlas en fin d'après-midi et pour voir les familles marrakchies le week-end, pas pour le monument. Le pavillon à 50 MAD est dispensable."
+  },
+  cyberpark: {
+    horaires: "7 h 30 - 18 h 30, tous les jours",
+    tarif: "Parc gratuit, 5 MAD pour l'espace Internet",
+    monAvis: "Le meilleur raccourci de la ville : au lieu de longer l'avenue Mohammed V au soleil entre la médina et Guéliz, on le traverse à l'ombre, gratuitement."
+  },
+  tanneries: {
+    monAvis: "Le terrain de chasse le plus agressif de la ville. La règle est simple : ne suivez personne qui vous aborde dans la rue, dites « la choukran » et continuez sans ralentir. Un « gardien » vous dira que c'est fermé ou que vous vous trompez de chemin, c'est faux. Achetez votre bouquet de menthe avant d'entrer, et donnez 10 à 20 MAD, pas plus. Si ce bras de fer ne vous tente pas, passez par un guide officiel."
+  },
+  souks: {
+    monAvis: "Partez à 30 ou 40 % du prix annoncé et visez la moitié, en liquide et avec de la petite monnaie. Perdez-vous volontairement une matinée : c'est là que ça se passe, pas sur l'axe balisé Semmarine."
+  },
+  soukelkhemis: {
+    horaires: "10 h - 19 h, plus animé le jeudi et le dimanche matin, certaines échoppes fermées le vendredi",
+    monAvis: "Marché aux puces au nord de Bab El Khemis : zéro tourisme, prix réels, mais il faut aimer fouiller. Prévoyez un taxi qui attend, les retours sont difficiles depuis là-bas."
+  },
+  "33rueMajorelle": {
+    adresse: "33 rue Yves Saint Laurent, face au Jardin Majorelle",
+    horaires: "9 h - 19 h, tous les jours",
+    tel: "+212 5 24 31 41 95",
+    site: "33ruemajorelle.com",
+    monAvis: "Prix fixes et élevés, mais une centaine de créateurs marocains sur deux étages. C'est l'adresse cadeaux du jour où vous n'aurez plus l'énergie de négocier, et c'est juste en face de Majorelle."
+  },
+  ensemble: {
+    adresse: "Avenue Mohammed V, Guéliz",
+    horaires: "9 h 30 - 19 h du lundi au samedi, 9 h - 14 h le dimanche",
+    monAvis: "Prix fixes affichés et artisans au travail. Vous n'y ferez pas la bonne affaire, mais faites-y votre repérage tarifaire le premier jour : vous saurez ensuite ce que vaut vraiment un plateau ou une babouche."
+  },
+  cafeclock: {
+    adresse: "224 Derb Chtouka, quartier de la Kasbah, médina",
+    tel: "+212 5 24 37 83 67",
+    monAvis: "Une ancienne école transformée en maison culturelle : concerts gnaoua, contes en darija et en anglais, burger de chameau. Regardez le programme de la semaine en arrivant, les concerts sont souvent gratuits."
+  },
+  salama: {
+    adresse: "40 rue des Banques, à deux pas de Jemaa el-Fna",
+    site: "lesalamamarrakech.com",
+    horaires: "11 h - 2 h, spectacle de danse orientale à 21 h",
+    avis: { src: "Tripadvisor", txt: "avis partagés : le décor séduit, le spectacle et la terrasse déçoivent souvent" },
+    monAvis: "Montez pour un verre à l'heure où la place s'allume, et ne comptez pas sur l'assiette ni sur le spectacle. C'est l'une des rares adresses qui sert de l'alcool en pleine médina, c'est déjà beaucoup."
+  },
+  pepenero: {
+    adresse: "17 Derb Cherkaoui, Douar Graoua, médina",
+    tel: "+212 5 24 38 90 67",
+    horaires: "12 h 30 - 15 h 30 et 18 h - 23 h 30",
+    monAvis: "L'ancienne résidence du pacha, à cinq minutes à pied de Jemaa el-Fna, avec un bassin éclairé aux bougies. Demandez une table au bord de l'eau et prévoyez une tenue correcte."
+  },
+  beldi: {
+    horaires: "Accès day pass de 10 h à 17 h",
+    tarif: "370 MAD le day pass avec déjeuner trois plats, piscine, transat et serviette. 100 MAD la piscine seule, 270 MAD le déjeuner seul",
+    site: "beldicountryclub.com",
+    monAvis: "370 MAD pour une roseraie de trois hectares, deux piscines et un déjeuner sous les oliviers, c'est le meilleur plan de la journée la plus chaude de la semaine. Demandez au taxi de revenir vous chercher à heure fixe, il n'y a pas de circulation là-bas."
+  },
+  cafeepices: {
+    adresse: "75 Rahba Lakdima, médina",
+    horaires: "9 h - 23 h, tous les jours",
+    site: "cafedesepices.ma",
+    monAvis: "Le poste d'observation le moins cher de la médina : trois niveaux au-dessus de la place aux vanniers, jus frais et sandwichs. Précisez « espresso » si vous ne voulez pas un Nescafé."
+  },
+  grandcafeposte: {
+    adresse: "Angle boulevard El Mansour Eddahbi et rue Imam Malik, Guéliz",
+    horaires: "9 h - 1 h, tous les jours",
+    site: "grandcafedelaposte.restaurant",
+    monAvis: "Une brasserie de 1925 avec ventilateurs au plafond et service en tenue. Le meilleur petit-déjeuner à l'européenne de la ville, et un bar qui s'anime après 19 h."
+  },
+  lmida: {
+    adresse: "78 bis Derb Nkhel, Rahba Kedima, médina",
+    horaires: "12 h - 23 h, sept jours sur sept",
+    site: "lmidamarrakech.com",
+    monAvis: "Une douzaine de tables seulement sur une terrasse contemporaine face aux toits. Réservez pour le coucher du soleil : c'est la meilleure alternative quand Nomad est complet."
+  },
+  kabana: {
+    adresse: "Kissariat Ben Khaled, 1 rue Fatima Ezzahra, quartier R'mila",
+    horaires: "11 h - 2 h, tous les jours",
+    site: "kabana-marrakech.com",
+    monAvis: "Vue frontale sur la Koutoubia et DJ dès la fin d'après-midi. C'est plus jeune et plus sonore qu'El Fenn : parfait pour un apéro qui glisse vers la soirée, à réserver le week-end."
+  },
+  barometre: {
+    adresse: "Rue Moulay Ali, Résidence Al Houda, Guéliz, en bas d'un escalier derrière une porte non signalée",
+    horaires: "18 h 30 - 1 h, plus 12 h - 1 h du lundi au samedi",
+    monAvis: "Le premier bar de mixologie de Marrakech, ouvert en 2016, et toujours le meilleur. Installez-vous au comptoir plutôt qu'en salle et laissez le barman choisir. La salle est minuscule, réservez le week-end."
+  },
+  skybarpearl: {
+    adresse: "Avenue Echouhada, angle rue des Temples, Hivernage",
+    monAvis: "Bar de piscine au sommet, vue à 360° sur la ville et l'Atlas. C'est cher et un peu m'as-tu-vu, mais arrivez 30 minutes avant le coucher du soleil et le premier verre se justifie. Quinze minutes à pied de Jemaa el-Fna."
+  },
+  bozin: {
+    adresse: "Route de l'Ourika, km 3,5",
+    tel: "+212 5 24 38 80 12",
+    horaires: "20 h - 4 h, tous les jours",
+    monAvis: "Dîner asiatique à 21 h, ambiance à partir de 23 h 30, club jusqu'à 4 h. Négociez le retour avec le taxi dès l'aller ou faites-en appeler un par l'établissement : après minuit, le tarif double."
+  },
+  theatro: {
+    horaires: "23 h 30 - 5 h, tous les soirs",
+    tarif: "200 à 300 MAD selon la soirée, parfois avec une consommation",
+    site: "theatromarrakech.com",
+    monAvis: "Un ancien théâtre de l'hôtel Es Saadi transformé en club à scénographie. Rien ne commence avant 1 h du matin, et prévoyez le retour : tarif de nuit à la sortie."
+  },
+  cuisineamal: {
+    tarif: "600 MAD par personne à La Maison Arabe. L'atelier de l'association Amal finance directement la formation d'une femme",
+    monAvis: "Deux formules très différentes : Amal, associatif, chaleureux et utile, ou La Maison Arabe, en cuisine professionnelle avec une dada. On repart avec les recettes, et c'est le seul souvenir de Marrakech qui ne prend pas de place dans la valise."
+  },
+  "calèche": {
+    tarif: "compter 200 MAD l'heure environ pour quatre personnes, de 300 MAD l'heure à 750 MAD les trois heures chez les prestataires. Le tarif officiel de 80 MAD l'heure ne s'applique qu'à la demi-journée ou à la journée",
+    monAvis: "Kitsch et lent, et pourtant c'est la meilleure façon de comprendre la géographie de la ville en une heure. Fixez le prix avant de monter, et regardez l'état du cheval : tous les cochers ne se valent pas."
+  },
+  montgolfiere: {
+    tarif: "environ 2 400 MAD par personne pour un vol classique, transferts inclus. De 190 à 680 € selon la formule, de la nacelle collective au vol privé",
+    monAvis: "Départ vers 5 h 30 du matin, une heure de vol au-dessus de la palmeraie et de la plaine du Haouz, petit-déjeuner sous tente au retour. Réservez en milieu de séjour : si le vent annule, il vous reste des jours pour reprogrammer."
+  },
+  quad: {
+    tarif: "environ 200 MAD les 2 h de quad avec guide et pause thé",
+    monAvis: "200 MAD les deux heures, c'est l'activité la moins chère du séjour, et elle est juste derrière votre hôtel. Prenez le créneau de fin d'après-midi pour la lumière, et prévoyez lunettes et foulard : ça poussière sévèrement."
+  },
+  golfamelkis: {
+    tarif: "green fee 700 MAD, 400 MAD pour les résidents",
+    monAvis: "27 trous dessinés par Cabell Robinson avec l'Atlas en toile de fond. Réservez un départ tôt, 7 h 30 en été, et louez les clubs sur place plutôt que de porter les vôtres."
+  },
+  agafay: {
+    monAvis: "45 minutes de route, et ce n'est pas le Sahara : c'est un désert de pierre, pas de dunes. Comptez 60 à 80 € pour deux en demi-journée avec transfert, dîner et spectacle, et 150 à 250 € pour deux la nuit en camp. Prenez une veste, les nuits y sont froides même en été."
+  },
+  ourika: {
+    monAvis: "60 km et une heure de route au sud, dans une vallée verte le long de l'oued. Partez à 8 h pour éviter la foule du week-end, prenez un guide local aux cascades de Setti Fatma (100 à 150 MAD, le sentier glisse) et mettez des chaussures fermées. Balade à dromadaire au bord de la rivière dès 25 € par personne."
+  },
+  anima: {
+    horaires: "9 h - 17 h 30",
+    tarif: "140 MAD adulte, 60 MAD de 12 à 16 ans, Marocains, résidents et étudiants. Navette aller-retour comprise dans le billet",
+    site: "anima-garden.com",
+    monAvis: "Le meilleur jardin des environs, très loin devant la Ménara, et bien moins couru que Majorelle. Surtout : la navette est comprise dans le billet, départs du parking de la Koutoubia à 9 h 30, 11 h 30 et 14 h 30. C'est la seule escapade du séjour qui ne coûte pas un dirham de taxi."
+  },
+  takerkoust: {
+    monAvis: "Une cinquantaine de minutes de route, un lac de barrage bordé de terrasses face à l'Atlas. Déjeunez au Flouka au bord de l'eau, et combinez avec Agafay dans la même journée : c'est sur la même route."
+  },
+  imlil: {
+    monAvis: "64 km et 1 h 30 de route, à 1 740 m : vingt degrés de moins qu'en ville. La balade Imlil-Aroumd, deux heures aller-retour, se fait sans guide. Pour monter plus haut, prenez un guide local sur place. Excursion à la journée dès 35 € par personne à six."
+  },
+  ouzoud: {
+    monAvis: "150 km et 2 h 30 à 3 h de route : départ à 7 h impératif, sinon vous passerez la journée en voiture. L'excursion organisée à 25-45 € par personne, déjeuner et tour en barque compris, est bien plus rentable qu'un taxi privé. Et ne nourrissez pas les singes."
+  },
+  babagnaou: {
+    monAvis: "La plus belle porte almohade de la ville, en grès bleuté, et le quartier le moins harcelant de la médina. Commencez votre matinée Kasbah par là avant d'enchaîner sur les Tombeaux Saadiens, à cinq minutes."
+  },
+  remparts: {
+    monAvis: "19 km de murailles de pisé : on ne les visite pas, on les longe. Une heure avant le coucher du soleil, l'ocre vire à l'orange et c'est là que la calèche prend tout son sens."
+  },
+  palmeraie: {
+    monAvis: "Vous logez dedans, donc c'est l'activité la moins chère du séjour en taxi. C'est touristique et assumé, mais un dromadaire au coucher du soleil à cinq minutes de votre chambre, ça ne se refuse pas un soir de la semaine."
+  },
+  rahba: {
+    monAvis: "La petite place des herboristes et des vanniers, et surtout le meilleur point de repère du dédale : quand vous êtes perdus, demandez Rahba Lakdima. Le Nomad et le Café des Épices donnent tous les deux dessus."
+  },
+  mechoui: {
+    monAvis: "L'expérience de rue la plus authentique de la ville : l'agneau cuit toute la nuit dans un four enterré, servi au poids avec du pain, du cumin et du sel. Arrivez vers 12 h 30, à 14 h il n'y a plus rien."
+  },
+  "16cafe": {
+    monAvis: "Rien d'exceptionnel, mais une terrasse ombragée sur la place du 16 Novembre et un bon poste d'observation de la Marrakech qui travaille. Wifi correct si vous devez bosser une heure."
+  },
+  essaouira: {
+    monAvis: "175 km par une bonne route, 3 h de bus. Supratours vous dépose en plein centre, CTM non : 90 MAD chez CTM, 100 à 140 MAD chez Supratours, sept départs par jour à partir de 7 h 45. Si vous ne faites qu'une escapade, hésitez entre celle-ci et l'Atlas, et si vous choisissez Essaouira, dormez-y une nuit plutôt que de faire l'aller-retour."
   }
 };

@@ -6,9 +6,11 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
 
 ## Ce que fait l'app
 
-- **Carte interactive** : 65 adresses géolocalisées, épingles par catégorie, hôtel repéré.
+- **Carte interactive** : 64 adresses géolocalisées, épingles par catégorie, hôtel repéré.
 - **8 catégories** : restaurants, cafés, bars et rooftops, monuments, jardins, activités,
   souks et shopping, escapades à proximité (Agafay, Ourika, Imlil, Essaouira, Ouzoud…).
+- **Photos réelles** depuis Wikipédia pour les 20 lieux qui ont leur propre article,
+  visuel zellige généré pour les autres : jamais une photo qui ne serait pas celle du lieu.
 - **Fiche complète** par adresse : photo, note du guide, niveau de prix, durée
   conseillée, description, conseils de terrain, horaires, coordonnées GPS.
 - **Coût du taxi** pour chaque adresse : tarif de journée et tarif après 21 h, calculés
@@ -32,10 +34,18 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
 
 ## Précision sur les données
 
-Les notes sont l'**appréciation de ce guide**, sur 5, et l'interface le dit à l'écran.
-Ce ne sont pas des moyennes d'avis Google ou TripAdvisor, et aucun nombre d'avis n'est
-affiché : il n'existe pas de source vérifiable pour ces chiffres, donc ils ne sont pas
-inventés. Les prix de taxi sont des **estimations** : environ
+Trois niveaux d'information, séparés à l'écran :
+
+1. **Faits relevés en ligne** (adresse, horaires, tarif, téléphone, site, note avec sa
+   source et son nombre d'avis) : recherchés en septembre 2026, pour **48 adresses sur
+   64**. Une donnée introuvable reste absente, elle n'est jamais estimée.
+2. **Note** : quand elle vient de Tripadvisor, elle porte la pastille de sa source et son
+   nombre d'avis (11 adresses). Sinon c'est mon appréciation, libellée « note du guide ».
+3. **Mon avis** : mon opinion et mes conseils, dans un bloc distinct, sur les 64 adresses.
+
+Chaque fiche indique si ses informations ont été relevées en ligne ou non.
+
+Les prix de taxi sont des **estimations** : environ
 11 MAD du kilomètre routier en petit taxi négocié, minimum de course 40 MAD, majoration
 de 50 % après 21 h. Au compteur, c'est presque toujours moins cher. Négociez toujours
 avant de monter.
