@@ -30,24 +30,66 @@ function distanceKm(a, b) {
    Un POI peut fournir un override (grand taxi, excursion, transfert inclus). */
 const TARIF_KM = 11, MINI = 40, SINUOSITE = 1.35, VITESSE = 21;
 
+/* Taux fixe relevé le 4 septembre 2026 (1 EUR = 10,82 MAD). Volontairement figé :
+   l'app doit fonctionner hors ligne dans la médina, et un ordre de grandeur suffit
+   pour décider si on prend le taxi ou pas. */
+const TAUX_EUR = 10.82;
+const TAUX_DATE = "4 septembre 2026";
+
+const DEVISE_KEY = "mrk.devise.v1";
+let devise = "MAD";
+try { devise = localStorage.getItem(DEVISE_KEY) === "EUR" ? "EUR" : "MAD"; } catch {}
+
+/* Arrondi à l'euro entier : ces montants servent à décider si on prend un taxi,
+   pas à tenir une comptabilité. Une décimale seulement sous 2 €. */
+function enEuros(mad) {
+  const e = mad / TAUX_EUR;
+  return e < 2 ? e.toFixed(1).replace(".", ",") : String(Math.round(e));
+}
+
+/* Un montant en dirhams, affiché dans la devise active. */
+function prix(mad) {
+  return devise === "EUR" ? `${enEuros(mad)} €` : `${Math.round(mad)} MAD`;
+}
+
+function fourchette(a, b) {
+  return devise === "EUR"
+    ? `${enEuros(a)}-${enEuros(b)} €`
+    : `${Math.round(a)}-${Math.round(b)} MAD`;
+}
+
+/* Convertit les montants écrits en toutes lettres dans les textes sourcés
+   (« 100 MAD adulte, 30 MAD enfant ») sans toucher au reste de la phrase. */
+function convertirTexte(txt) {
+  if (devise !== "EUR" || !txt) return txt;
+  return txt.replace(/(\d[\d\s\u00a0\u202f]*)\s*(MAD|dirhams?|DH|dhs)/gi,
+    (m, n) => `${enEuros(parseFloat(n.replace(/[\s\u00a0\u202f]/g, "")))} €`);
+}
+
+function basculerDevise() {
+  devise = devise === "MAD" ? "EUR" : "MAD";
+  try { localStorage.setItem(DEVISE_KEY, devise); } catch {}
+  rendreListe();
+  if (etat.actif) ouvrirDetail(etat.actif, false);
+  toast(devise === "EUR"
+    ? `Prix en euros, au taux du ${TAUX_DATE}`
+    : "Prix en dirhams");
+}
+
 function round5(n) { return Math.max(5, Math.round(n / 5) * 5); }
 
 function taxiInfo(poi) {
   const volOiseau = distanceKm(HOTEL, poi);
   const km = volOiseau * SINUOSITE;
   const minutes = Math.max(4, Math.round(km / VITESSE * 60));
-  if (poi.taxi) {
-    return { km, minutes, ...poi.taxi, forfait: true,
-             jourTxt: poi.taxi.jour === 0 ? "Inclus" : `~${poi.taxi.jour} MAD`,
-             nuitTxt: poi.taxi.nuit ? `~${poi.taxi.nuit} MAD` : "sans objet" };
-  }
+  if (poi.taxi) return { km, minutes, ...poi.taxi, forfait: true };
   const base = Math.max(MINI, km * TARIF_KM);
   const jour = round5(base);
   const nuit = round5(base * 1.5);
   return {
     km, minutes, jour, nuit, forfait: false,
-    jourTxt: `${round5(jour * .85)}-${round5(jour * 1.2)} MAD`,
-    nuitTxt: `${round5(nuit * .85)}-${round5(nuit * 1.2)} MAD`,
+    bas: round5(jour * .85), haut: round5(jour * 1.2),
+    basNuit: round5(nuit * .85), hautNuit: round5(nuit * 1.2),
     note: km < 1.6
       ? "Moins de 2 km : la marche est plus rapide qu'un taxi coincé dans la circulation."
       : "Petit taxi, prix négocié avant de monter. Exigez le compteur si le chauffeur l'accepte, c'est presque toujours moins cher."
@@ -55,6 +97,16 @@ function taxiInfo(poi) {
 }
 
 const fmtPrix = n => n ? "€".repeat(n) : "Gratuit";
+
+/* Le tarif taxi d'un POI, dans la devise active. */
+function taxiJour(t) {
+  if (t.forfait) return t.jour === 0 ? "Inclus" : `~${prix(t.jour)}`;
+  return fourchette(t.bas, t.haut);
+}
+function taxiNuit(t) {
+  if (t.forfait) return t.nuit ? `~${prix(t.nuit)}` : "sans objet";
+  return fourchette(t.basNuit, t.hautNuit);
+}
 const fmtNote = n => n.toFixed(1).replace(".", ",");
 const fmtNb = n => n.toLocaleString("fr-FR");
 
@@ -314,7 +366,8 @@ function carteHTML(p) {
         </div>
         <div class="meta">
           <span class="tag">${CATEGORIES[p.cat].icon} ${CATEGORIES[p.cat].label}</span>
-          <span class="taxi-badge">🚕 ${t.forfait && t.jour === 0 ? "inclus" : t.jourTxt.replace(" MAD", "")} <span style="opacity:.7;font-weight:600">MAD</span></span>
+          <span class="taxi-badge" data-devise
+                title="Toucher pour basculer entre dirhams et euros">🚕 ${taxiJour(t)}</span>
         </div>
       </div>
       </button>
@@ -343,7 +396,9 @@ function rendreListe() {
     liste.innerHTML = res.map(carteHTML).join("") + `
       <p class="source">Les notes marquées <b>Tr</b> viennent de Tripadvisor, relevées en
       ${RELEVE}. Les autres sont mon appréciation, pas une moyenne d'avis. Les prix de
-      taxi sont estimés à partir de la distance depuis l'hôtel, à négocier avant de monter.</p>`;
+      taxi sont estimés à partir de la distance depuis l'hôtel, à négocier avant de monter.
+      Touchez un prix pour basculer entre dirhams et euros${devise === "EUR"
+        ? `, au taux du ${TAUX_DATE}` : ""}.</p>`;
     $$("#liste img[data-poi]").forEach(img => peupleImage(img, parId[img.dataset.poi]));
   }
 
@@ -356,9 +411,12 @@ function rendreListe() {
   // budget taxi cumulé de la wishlist
   const budget = $("#budget");
   if (etat.wishlist && res.length) {
-    const total = res.reduce((s, p) => s + (p._taxi.forfait ? p._taxi.jour : p._taxi.jour), 0);
+    const total = res.reduce((s, p) => s + p._taxi.jour, 0);
     budget.hidden = false;
-    budget.textContent = `Budget taxi aller simple, tout compris : ~${Math.round(total / 10) * 10} MAD (~${Math.round(total / 11)} €)`;
+    budget.textContent = `Budget taxi aller simple, tout compris : ~${
+      devise === "EUR" ? `${enEuros(total)} €` : `${Math.round(total / 10) * 10} MAD`}`;
+    budget.setAttribute("data-devise", "");
+    budget.title = "Toucher pour basculer entre dirhams et euros";
   } else budget.hidden = true;
   $("#wl-actions").hidden = !(etat.wishlist && res.length);
 
@@ -445,12 +503,19 @@ function ouvrirDetail(id, recentre = true) {
       </div>
 
       <div class="taxi-card">
-        <div class="hd">🚕 Taxi depuis le Riu Tikida Garden <span class="hd-note">estimation</span></div>
-        <div class="taxi-grid">
-          <div><div class="k">Journée</div><div class="v">${t.jourTxt}</div></div>
-          <div><div class="k">Après 21 h</div><div class="v">${t.nuitTxt}</div></div>
+        <div class="hd">🚕 Taxi depuis le Riu Tikida Garden
+          <button class="devise-btn" id="d-devise"
+                  aria-label="Afficher les prix en ${devise === "MAD" ? "euros" : "dirhams"}"
+          >${devise === "MAD" ? "€" : "MAD"}</button>
         </div>
-        <div class="taxi-note">${t.note || ""}${marche ? "" : ""}</div>
+        <div class="taxi-grid">
+          <div data-devise title="Toucher pour basculer entre dirhams et euros">
+            <div class="k">Journée</div><div class="v">${taxiJour(t)}</div></div>
+          <div data-devise title="Toucher pour basculer entre dirhams et euros">
+            <div class="k">Après 21 h</div><div class="v">${taxiNuit(t)}</div></div>
+        </div>
+        <div class="taxi-note">${t.note || ""}${devise === "EUR"
+          ? ` Converti au taux du ${TAUX_DATE}, 1 € = ${String(TAUX_EUR).replace(".", ",")} MAD.` : ""}</div>
       </div>
 
       <div class="section">
@@ -461,12 +526,12 @@ function ouvrirDetail(id, recentre = true) {
       ${p.monAvis ? `
       <div class="section mon-avis">
         <h4>Mon avis</h4>
-        <p>${p.monAvis}</p>
+        <p>${convertirTexte(p.monAvis)}</p>
       </div>` : ""}
 
       <div class="section">
         <h4>Bon à savoir</h4>
-        <ul class="tips">${p.tips.map(x => `<li>${x}</li>`).join("")}</ul>
+        <ul class="tips">${p.tips.map(x => `<li>${convertirTexte(x)}</li>`).join("")}</ul>
       </div>
 
       <div class="section">
@@ -474,7 +539,8 @@ function ouvrirDetail(id, recentre = true) {
         <dl class="pratique">
           ${p.adresse ? `<dt>Adresse</dt><dd>${p.adresse}</dd>` : ""}
           <dt>Horaires</dt><dd>${p.horaires}</dd>
-          ${p.tarif ? `<dt>Tarif</dt><dd>${p.tarif}</dd>` : ""}
+          ${p.tarif ? `<dt>Tarif</dt><dd data-devise
+             title="Toucher pour basculer entre dirhams et euros">${convertirTexte(p.tarif)}</dd>` : ""}
           ${p.tel ? `<dt>Téléphone</dt><dd><a href="tel:${p.tel.replace(/ /g, "")}">${p.tel}</a></dd>` : ""}
           ${p.site ? `<dt>Site</dt><dd><a href="https://${p.site}" target="_blank" rel="noopener">${p.site}</a></dd>` : ""}
           <dt>Réservation</dt><dd>${p.reserver ? "recommandée, voire indispensable" : "pas nécessaire"}</dd>
@@ -505,6 +571,7 @@ function ouvrirDetail(id, recentre = true) {
 
   $("#d-close").onclick = fermerDetail;
   $("#d-fav").onclick = () => basculeFav(p.id);
+  $("#d-devise").onclick = basculerDevise;
   $("#d-go").onclick = () => ouvrirGuidage(p);
   $("#d-map").onclick = () => { fermerDetail(); allerA(p.lat, p.lng, 16); };
   $("#d-share").onclick = () => partager(p);
@@ -536,7 +603,7 @@ function fermerDetail() {
 }
 
 async function partager(p) {
-  const txt = `${p.nom} : ${CATEGORIES[p.cat].label} à Marrakech\n★ ${fmtNote(p.note)}/5 selon ce guide · taxi depuis l'hôtel ~${p._taxi.jourTxt}\nhttps://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
+  const txt = `${p.nom} : ${CATEGORIES[p.cat].label} à Marrakech\n★ ${fmtNote(p.note)}/5 selon ce guide · taxi depuis l'hôtel ~${taxiJour(p._taxi)}\nhttps://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`;
   if (navigator.share) { try { await navigator.share({ title: p.nom, text: txt }); return; } catch {} }
   try { await navigator.clipboard.writeText(txt); toast("Copié dans le presse-papier"); }
   catch { toast("Impossible de partager"); }
@@ -547,8 +614,8 @@ async function partagerWishlist() {
   if (!liste.length) return;
   const total = liste.reduce((s, p) => s + p._taxi.jour, 0);
   const txt = "Notre semaine à Marrakech\n\n" +
-    liste.map(p => `• ${p.nom} (${CATEGORIES[p.cat].label}, ★${fmtNote(p.note)} selon ce guide) : taxi ~${p._taxi.jourTxt}\n  https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`).join("\n") +
-    `\n\nBudget taxi aller simple : ~${Math.round(total / 10) * 10} MAD`;
+    liste.map(p => `• ${p.nom} (${CATEGORIES[p.cat].label}, ★${fmtNote(p.note)} selon ce guide) : taxi ~${taxiJour(p._taxi)}\n  https://www.google.com/maps/search/?api=1&query=${p.lat},${p.lng}`).join("\n") +
+    `\n\nBudget taxi aller simple : ~${devise === "EUR" ? enEuros(total) + " €" : Math.round(total / 10) * 10 + " MAD"}`;
   if (navigator.share) { try { await navigator.share({ title: "Wishlist Marrakech", text: txt }); return; } catch {} }
   try { await navigator.clipboard.writeText(txt); toast("Wishlist copiée"); }
   catch { toast("Copie impossible"); }
@@ -759,6 +826,17 @@ function initEvenements() {
     try { await navigator.clipboard.writeText(`${poiGuide.lat},${poiGuide.lng}`); toast("Coordonnées copiées"); }
     catch { toast("Copie impossible"); }
   });
+
+  /* Un clic sur n'importe quel montant bascule dirhams et euros, partout et
+     durablement. La délégation couvre la liste comme la fiche, qui sont
+     re-rendues à chaque bascule. */
+  document.addEventListener("click", e => {
+    const cible = e.target.closest("[data-devise]");
+    if (!cible) return;
+    e.preventDefault();
+    e.stopPropagation();
+    basculerDevise();
+  }, true);
 
   addEventListener("keydown", e => {
     if (e.key !== "Escape") return;

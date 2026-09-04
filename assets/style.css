@@ -238,8 +238,19 @@ img{max-width:100%;display:block}
 .pratique dd{margin:0;line-height:1.5}
 .pratique a{color:var(--zellige);font-weight:600}
 .releve{margin:14px 0 0;font-size:11.5px;line-height:1.5;color:var(--gris);font-style:italic}
+[data-devise]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.taxi-badge[data-devise]{text-decoration:underline dotted;text-underline-offset:3px}
+.taxi-grid > div[data-devise]:active{background:var(--sable)}
+.pratique dd[data-devise]{text-decoration:underline dotted;text-underline-offset:3px}
+#budget[data-devise]{text-decoration:underline dotted;text-underline-offset:3px}
+.devise-btn{
+  margin-left:auto;min-width:52px;height:44px;padding:0 12px;border-radius:10px;
+  background:var(--surface);color:var(--zellige);font-weight:700;font-size:13px;
+  border:1px solid rgba(31,111,120,.3);
+}
+.devise-btn:active{transform:scale(.95)}
 .hd-note{
-  margin-left:auto;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;
+  margin-left:8px;font-size:10.5px;text-transform:uppercase;letter-spacing:.1em;
   color:var(--gris);font-weight:700;
 }
 .source{
@@ -323,7 +334,7 @@ img{max-width:100%;display:block}
   margin:0 16px;border-radius:var(--r);overflow:hidden;border:1px solid rgba(31,111,120,.25);
   background:linear-gradient(135deg,rgba(31,111,120,.07),rgba(217,154,11,.07));
 }
-.taxi-card .hd{display:flex;align-items:center;gap:8px;padding:11px 13px;
+.taxi-card .hd{display:flex;align-items:center;gap:8px;padding:5px 8px 5px 13px;
   background:rgba(31,111,120,.12);font-weight:700;font-size:13.5px;color:var(--zellige)}
 .taxi-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(31,111,120,.18)}
 .taxi-grid > div{background:var(--parchemin);padding:11px 13px}

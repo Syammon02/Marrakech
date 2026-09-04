@@ -22,6 +22,10 @@ l'hôtel **Riu Tikida Garden** (Circuit de la Palmeraie).
 - **Wishlist** : cœur sur chaque adresse, liste dédiée, budget taxi cumulé, partage de la
   liste en un message.
 - **Tri et recherche** : par distance ou par note, recherche plein texte.
+- **Dirhams ou euros** : toucher un prix bascule toute l'app d'une devise à l'autre,
+  y compris les tarifs d'entrée écrits dans les fiches. Taux fixe relevé le
+  4 septembre 2026 (1 € = 10,82 MAD), figé pour rester utilisable hors ligne.
+  Le choix est mémorisé.
 - **PWA** : installable sur l'écran d'accueil, service worker, tuiles de carte et photos
   mises en cache pour survivre à une 4G capricieuse dans la médina.
 - **Thème clair et sombre** automatiques, selon la préférence du système, fond de carte
