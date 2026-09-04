@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<title>Marrakech — le guide de la semaine</title>
+<meta name="description" content="Carte interactive des meilleures adresses de Marrakech : restaurants, cafés, rooftops, monuments, activités et escapades, avec le coût du taxi depuis le Riu Tikida Garden.">
+<meta name="theme-color" content="#241611">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Marrakech">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./assets/icon-180.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=DM+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="./assets/style.css">
+</head>
+<body>
+
+<!-- ---------- écran d'accueil ---------- -->
+<div class="intro zellige-bg" id="intro">
+  <div>
+    <svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#D99A0B" stroke-width="1.2" style="margin:0 auto">
+      <path d="M12 2v3M9 5h6l1.5 4a4.5 4.5 0 0 1-9 0L9 5Z"/>
+      <path d="M12 13.5V19M9 19h6M8 22h8"/>
+    </svg>
+    <h1>Marrakech</h1>
+    <p>Sept jours, une carte. Les bonnes adresses, les vrais prix, et le taxi calculé depuis votre hôtel.</p>
+    <div class="load"><i></i></div>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ---------- barre du haut ---------- -->
+  <header class="topbar zellige-bg">
+    <div class="brand">
+      <svg class="lamp" viewBox="0 0 24 24" fill="none" stroke="#D99A0B" stroke-width="1.3">
+        <path d="M12 2v3M9 5h6l1.5 4a4.5 4.5 0 0 1-9 0L9 5Z"/>
+        <path d="M12 13.5V19M9 19h6M8 22h8"/>
+      </svg>
+      <h1>Marrakech<small>Riu Tikida Garden · 7 jours</small></h1>
+      <span class="spacer"></span>
+      <button class="icon-btn" id="btn-install" hidden aria-label="Installer l'application">⤓</button>
+      <button class="icon-btn" id="btn-hotel" aria-label="Revenir à l'hôtel">🏨</button>
+      <button class="icon-btn" id="btn-wishlist" aria-label="Ma wishlist">
+        ♥<span class="count" id="fav-count" hidden>0</span>
+      </button>
+    </div>
+
+    <label class="searchbar">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+      </svg>
+      <input id="q" type="search" placeholder="Chercher un tajine, un rooftop, un souk…"
+             autocomplete="off" enterkeyhint="search">
+      <button id="q-clear" aria-label="Effacer">✕</button>
+    </label>
+
+    <nav class="filters" id="filtres" aria-label="Catégories"></nav>
+  </header>
+
+  <!-- ---------- carte ---------- -->
+  <div id="map" role="application" aria-label="Carte de Marrakech"></div>
+
+  <!-- ---------- panneau liste ---------- -->
+  <section class="sheet" id="sheet" aria-label="Liste des adresses">
+    <div class="grabber" id="grabber" role="button" tabindex="0" aria-label="Agrandir ou réduire la liste"><i></i></div>
+    <div class="sheet-head">
+      <h2 id="titre-liste">Tout Marrakech</h2>
+      <span class="n" id="compte"></span>
+      <button class="sort" id="tri">⇅ Les plus proches</button>
+    </div>
+    <div class="wl-actions" id="wl-actions" hidden>
+      <button id="wl-share">↗ Partager la liste</button>
+      <button id="wl-clear">🗑 Tout effacer</button>
+    </div>
+    <p class="sheet-head" id="budget" hidden style="font-size:12.5px;color:#7A6A5D;padding-top:0"></p>
+    <div class="list" id="liste"></div>
+  </section>
+</div>
+
+<!-- ---------- fiche détail ---------- -->
+<aside class="detail" id="detail" aria-label="Fiche de l'adresse"></aside>
+
+<!-- ---------- menu guidage ---------- -->
+<div class="nav-menu" id="nav-menu" role="dialog" aria-modal="true" aria-label="Guidage">
+  <div class="box">
+    <h4 id="nav-titre"></h4>
+    <p class="sub" id="nav-sub"></p>
+
+    <div class="nav-from">
+      <button data-from="hotel" aria-pressed="true">🏨 Depuis l'hôtel</button>
+      <button data-from="moi" aria-pressed="false">📍 Depuis ma position</button>
+    </div>
+
+    <a class="nav-opt" id="nav-gmaps" target="_blank" rel="noopener">
+      <span class="e">🗺️</span><span><b>Google Maps</b><small>Itinéraire en voiture ou taxi</small></span>
+    </a>
+    <a class="nav-opt" id="nav-walk" target="_blank" rel="noopener">
+      <span class="e">🚶</span><span><b>À pied</b><small>Itinéraire piéton dans la médina</small></span>
+    </a>
+    <a class="nav-opt" id="nav-waze" target="_blank" rel="noopener">
+      <span class="e">🚗</span><span><b>Waze</b><small>Navigation guidée en direct</small></span>
+    </a>
+    <a class="nav-opt" id="nav-apple" target="_blank" rel="noopener">
+      <span class="e">🍎</span><span><b>Plans (iOS)</b><small>Ouvrir dans Apple Plans</small></span>
+    </a>
+    <button class="nav-opt" id="nav-copy">
+      <span class="e">📋</span><span><b>Copier les coordonnées</b><small>À montrer au chauffeur de taxi</small></span>
+    </button>
+    <button class="nav-opt" data-close style="justify-content:center;background:none">
+      <span><b>Annuler</b></span>
+    </button>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script type="module" src="./assets/app.js"></script>
+</body>
+</html>
